@@ -184,16 +184,20 @@ td {
 }
 
 .auth-card__header h1 {
+  font-family: "Helvetica Neue LT GEO", "Noto Sans Georgian", sans-serif;
+  font-weight: 700;
   color: #fff;
   font-size: 1.5rem;
+  line-height: 1.2;
   margin: 0;
 }
 
 .auth-card__header p {
+  font-weight: 400;
   color: #fff;
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
+  line-height: 1.33;
   margin: 0;
-  opacity: 0.9;
 }
 
 .auth-tabs {
@@ -216,7 +220,7 @@ td {
   color: #000;
   font-family: inherit;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1rem;
   cursor: pointer;
 }
 
@@ -257,8 +261,9 @@ td {
   background: transparent;
   color: #fff;
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 600;
+  line-height: 1.35;
   padding: 0.5rem 0;
 }
 
@@ -290,6 +295,7 @@ td {
   border: none;
   color: #fff;
   font-family: inherit;
+  font-weight: 500;
   font-size: 0.85rem;
   cursor: pointer;
   margin: 0.25rem 0 0.75rem;
@@ -315,8 +321,9 @@ td {
   justify-content: center;
   gap: 1.5rem;
   flex-wrap: wrap;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: #fff;
   margin-top: -0.5rem;
 }
 
@@ -351,7 +358,9 @@ td {
   transform: translate(-50%, -50%);
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   height: 12px;
+  min-width: 72px;
   background: #fff;
   color: rgba(0, 0, 0, 0.7);
   font-weight: 600;
