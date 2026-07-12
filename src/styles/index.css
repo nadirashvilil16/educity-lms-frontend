@@ -1,0 +1,121 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #f5f6f8;
+  color: #1a1a1a;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: #1a1a2e;
+  color: white;
+}
+
+.navbar__user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboard,
+.assignments,
+.attendance,
+.grades,
+.admin-students,
+.admin-teachers,
+.admin-courses,
+.admin-groups,
+.admin-attendance,
+.teacher-assignments {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.stat-cards {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 160px;
+  background: white;
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card__label {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.stat-card__value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.stat-card__meta {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.login-form {
+  max-width: 320px;
+  margin: 4rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-error {
+  color: #c0392b;
+}
+
+.assignment-card,
+.group-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.attendance__row,
+.submissions__row,
+.grade-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+button.is-active {
+  background: #2ecc71;
+  color: white;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e5e5;
+}
