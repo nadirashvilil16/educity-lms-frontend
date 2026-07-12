@@ -10,17 +10,17 @@ export function Navbar() {
     navigate("/login");
   }
 
+  if (!user) return null; // no chrome on the landing/login/register pages
+
   return (
     <nav className="navbar">
       <span className="navbar__brand">EduCity LMS</span>
-      {user && (
-        <div className="navbar__user">
-          <span>
-            {user.firstName} {user.lastName} · {user.role}
-          </span>
-          <button onClick={handleLogout}>გასვლა</button>
-        </div>
-      )}
+      <div className="navbar__user">
+        <span>
+          {user.firstName} {user.lastName} · {user.role}
+        </span>
+        <button onClick={handleLogout}>გასვლა</button>
+      </div>
     </nav>
   );
 }

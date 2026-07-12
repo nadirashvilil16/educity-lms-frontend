@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { AuthLayout } from "../components/AuthLayout";
+import { PasswordInput } from "../components/PasswordInput";
+import { SocialButtons } from "../components/SocialButtons";
 
 const DASHBOARD_BY_ROLE = {
   student: "/student",
@@ -28,18 +31,39 @@ export default function Login() {
   }
 
   return (
-    <form className="login-form" onSubmit={handleSubmit}>
-      <h1>EduCity LMS</h1>
-      <input type="email" placeholder="ელფოსტა" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      <input
-        type="password"
-        placeholder="პაროლი"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      {error && <p className="form-error">{error}</p>}
-      <button type="submit">შესვლა</button>
-    </form>
+    <AuthLayout
+      activeTab="login"
+      subtitle="გთხოვთ გაიაროთ ავტორიზაცია, თუ არ გაქვთ ანგარიში გაიარეთ რეგისტრაცია, რათა ისარგებლოთ ჩვენი სერვისებით"
+    >
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="auth-input">
+          <input
+            type="email"
+            placeholder="ელ. ფოსტა"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} placeholder="პაროლი" />
+
+        <button type="button" className="auth-form__forgot">
+          დაგავიწყდათ პაროლი?
+        </button>
+
+        {error && <p className="form-error">{error}</p>}
+
+        <button type="submit" className="auth-form__submit">
+          ავტორიზაცია
+        </button>
+
+        <div className="auth-divider">
+          <span>ან</span>
+        </div>
+
+        <SocialButtons />
+      </form>
+    </AuthLayout>
   );
 }
