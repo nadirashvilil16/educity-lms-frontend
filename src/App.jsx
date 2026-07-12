@@ -3,7 +3,9 @@ import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Navbar } from "./components/Navbar";
 
+import RoleSelect from "./pages/RoleSelect";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentAssignments from "./pages/student/StudentAssignments";
@@ -30,7 +32,9 @@ export default function App() {
     <AuthProvider>
       <Navbar />
       <Routes>
+        <Route path="/" element={<RoleSelect />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         <Route
           path="/student"
@@ -164,7 +168,7 @@ export default function App() {
           }
         />
 
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AuthProvider>
   );

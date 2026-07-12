@@ -9,12 +9,16 @@ export function AuthProvider({ children }) {
     return stored ? JSON.parse(stored) : null;
   });
 
+  function setSession(token, sessionUser) {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(sessionUser));
+    setUser(sessionUser);
+    return sessionUser;
+  }
+
   async function login(email, password) {
     const { data } = await authService.login(email, password);
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    setUser(data.user);
-    return data.user;
+    return setSession(data.token, data.user);
   }
 
   function logout() {
@@ -23,5 +27,5 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, login, logout, setSession }}>{children}</AuthContext.Provider>;
 }
