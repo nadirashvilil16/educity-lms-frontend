@@ -4,6 +4,7 @@ import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { AuthLayout } from "../components/AuthLayout";
 import { PasswordInput } from "../components/PasswordInput";
+import { DateInput } from "../components/DateInput";
 import { SocialButtons } from "../components/SocialButtons";
 import { GEORGIA_REGIONS } from "../constants/regions";
 
@@ -20,6 +21,7 @@ const EMPTY_FORM = {
   region: "",
   birthDate: "",
   password: "",
+  confirmPassword: "",
 };
 
 export default function Register() {
@@ -40,6 +42,11 @@ export default function Register() {
 
     if (!agreed) {
       setError("გთხოვთ დაეთანხმოთ წესებსა და პირობებს");
+      return;
+    }
+
+    if (form.password !== form.confirmPassword) {
+      setError("პაროლები არ ემთხვევა ერთმანეთს");
       return;
     }
 
@@ -100,10 +107,15 @@ export default function Register() {
         </div>
 
         <div className="auth-input">
-          <input type="date" placeholder="დაბადების თარიღი" value={form.birthDate} onChange={update("birthDate")} />
+          <DateInput placeholder="დაბადების თარიღი" value={form.birthDate} onChange={update("birthDate")} />
         </div>
 
         <PasswordInput value={form.password} onChange={update("password")} placeholder="პაროლი" />
+        <PasswordInput
+          value={form.confirmPassword}
+          onChange={update("confirmPassword")}
+          placeholder="დაადასტურეთ პაროლი"
+        />
 
         <div className="auth-form__hints">
           <span className={hasUppercase ? "is-met" : ""}>მინ. 1 დიდი ასო A</span>
@@ -112,7 +124,7 @@ export default function Register() {
 
         <label className="auth-form__agree">
           <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
-          ვეთანხმები წესებსა და პირობებს
+          გაეცანი და ვეთანხმები წესებსა და პირობებს
         </label>
 
         {error && <p className="form-error">{error}</p>}
