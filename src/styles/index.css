@@ -210,7 +210,7 @@ td {
   border-radius: 8px;
   padding: 4px;
   gap: 4px;
-  margin-bottom: 0.6rem;
+  margin: 0.85rem 0 0.3rem;
 }
 
 .auth-tabs button {
@@ -247,6 +247,12 @@ td {
   background: transparent;
   display: flex;
   align-items: center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-input:focus-within {
+  border-color: #3561fe;
+  box-shadow: 0 2px 4px rgba(53, 97, 254, 0.8);
 }
 
 .auth-input input,
@@ -292,7 +298,7 @@ td {
   font-family: inherit;
   font-size: 0.85rem;
   cursor: pointer;
-  margin: 0.5rem 0;
+  margin: 0.25rem 0 0.75rem;
 }
 
 .auth-form__submit {
