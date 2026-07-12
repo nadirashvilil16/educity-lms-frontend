@@ -11,7 +11,7 @@ export function AuthLayout({ activeTab, subtitle, children }) {
 
   return (
     <div className="auth-page">
-      <div className={`auth-card ${activeTab === "register" ? "auth-card--top" : ""}`}>
+      <div className="auth-card">
         <div className="auth-card__header">
           <h1>მოგესალმებით</h1>
           <p>{subtitle}</p>

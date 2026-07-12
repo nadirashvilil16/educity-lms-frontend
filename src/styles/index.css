@@ -175,12 +175,6 @@ td {
   gap: 1.25rem;
 }
 
-/* register has enough fields to fill the card on its own — anchor it to the
-   top instead of centering, so the heading doesn't drift down */
-.auth-card--top {
-  justify-content: flex-start;
-}
-
 .auth-card__header {
   display: flex;
   flex-direction: column;
@@ -345,22 +339,25 @@ td {
 .auth-divider {
   position: relative;
   width: 100%;
-  text-align: center;
   height: 1px;
   background: rgba(255, 255, 255, 0.4);
   margin: 1rem 0;
 }
 
 .auth-divider span {
-  position: relative;
-  top: -0.6rem;
-  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  height: 12px;
   background: #fff;
   color: rgba(0, 0, 0, 0.7);
   font-weight: 600;
   font-size: 0.75rem;
+  line-height: 1;
   padding: 0 12px;
-  border-radius: 6px;
 }
 
 .social-buttons {
