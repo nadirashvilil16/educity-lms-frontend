@@ -58,6 +58,10 @@ function BodyAsset({ file, className = "" }) {
   return <img className={className} src={`/assets/icons/body/${file}`} alt="" aria-hidden="true" />;
 }
 
+function FooterAsset({ file, className = "" }) {
+  return <img className={className} src={`/assets/icons/footer/${file}`} alt="" aria-hidden="true" />;
+}
+
 function TopicSummary({ topic }) {
   if (topic === "აპლიკაციის ინტერფეისი დიზაინი") {
     return <p><span className="student-summary__topic-line"><strong>თემა:</strong> აპლიკაციის</span><span className="student-summary__topic-line">ინტერფეისი დიზაინი</span></p>;
@@ -149,9 +153,23 @@ function AssignmentCard({ assignment, recentGrade, previousLectureDate, onUpload
 }
 
 function TasksPanel({ tasks }) {
-  return <section className="student-tasks"><aside><strong>▱ TASKS</strong><button>⊕ CREATE</button><button>✓ ALL TASKS</button><button>★ STARRED</button></aside><div className="student-tasks__list"><h3>MY TASKS</h3><button className="add-task">ADD TASK ＋</button><hr />
-    {tasks.length ? tasks.map((task) => <label key={task._id || task.id || task.title}><input type="checkbox" checked={Boolean(task.completed)} readOnly /> {task.title}</label>) : <p className="student-tasks__empty">დავალებები ჯერ არ არის</p>}<small>⚑ COMPLETED</small>
-  </div></section>;
+  return <section className="student-tasks">
+    <FooterAsset file="more.svg" className="student-tasks__more" />
+    <aside>
+      <div className="student-tasks__aside-title"><FooterAsset file="receipt.svg" /><strong>TASKS</strong></div>
+      <button type="button"><FooterAsset file="add-circle.svg" />CREATE</button>
+      <button type="button"><FooterAsset file="tick-circle.svg" />ALL TASKS</button>
+      <button type="button"><FooterAsset file="Star 1.svg" />STARRED</button>
+    </aside>
+    <div className="student-tasks__list">
+      <h3>MY TASKS</h3>
+      <button type="button" className="add-task"><span>ADD TASK</span><FooterAsset file="add-circle-1.svg" /></button><hr />
+      <div className="student-tasks__rows">
+        {tasks.length ? tasks.map((task) => <div className="student-task-row" key={task._id || task.id || task.title}><FooterAsset file={task.completed ? "tick-circle-1.svg" : "mirror.svg"} /><span>{task.title}</span></div>) : <p className="student-tasks__empty">დავალებები ჯერ არ არის</p>}
+      </div>
+      <small><FooterAsset file="flag.svg" />COMPLITED</small>
+    </div>
+  </section>;
 }
 
 function DashboardState({ message, onRetry }) {
