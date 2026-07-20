@@ -244,24 +244,28 @@ td {
   border-radius: 16px;
   background: #f4f4f4;
 }
-.student-dashboard__top { height: 460px; display: grid; grid-template-columns: minmax(0, 1.73fr) minmax(0, 1fr); gap: 18px; }
+.student-dashboard__top { height: 524px; display: grid; grid-template-columns: 620px minmax(0, 1fr); gap: 18px; }
 .student-card { overflow: hidden; border: 9px solid #061d32; border-radius: 28px; background: #fff; }
 .student-card__header { min-height: 51px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 18px; border-bottom: 1px solid #dfe3e7; }
 .student-card__header h2 { margin: 0; font-size: 1rem; }
 
-.student-calendar { padding-bottom: 14px; }
+.student-calendar { width: 620px; height: 524px; padding-bottom: 14px; box-shadow: 0 4px 4px rgba(0, 0, 0, .25); border-radius: 32px; }
+.student-calendar .student-card__header { min-height: 64px; }
+.student-calendar .student-card__header h2 { display: flex; align-items: center; gap: 14px; }
+.student-calendar__title-icon { display: block; width: 24px; height: 24px; }
 .calendar-switcher { display: flex; align-items: center; gap: 10px; font-size: .84rem; }
-.calendar-switcher button { width: 24px; height: 24px; border: 1px solid #dfe3e7; border-radius: 7px; background: #fff; cursor: pointer; }
+.calendar-switcher button { width: 32px; height: 32px; border: 1px solid #dfe3e7; border-radius: 8px; background: #fff; cursor: pointer; }
 .calendar-weekdays, .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding: 0 18px; text-align: center; }
-.calendar-weekdays { padding-top: 10px; color: #65717d; font-size: .67rem; font-weight: 700; }
-.calendar-grid span { position: relative; min-height: 32px; display: grid; place-items: center; border-radius: 9px; font-size: .76rem; }
+.calendar-weekdays { height: 42px; padding-top: 14px; color: #65717d; font-size: .75rem; font-weight: 700; }
+.calendar-grid { grid-auto-rows: 49px; }
+.calendar-grid span { position: relative; width: 76px; height: 42px; justify-self: center; display: grid; place-items: center; border-radius: 10px; font-size: .9rem; }
 .calendar-grid span.is-muted { color: #ced4da; }
 .calendar-grid span.has-event { background: #edf3fc; }
 .calendar-grid span.has-event::after { content: ""; position: absolute; bottom: 3px; width: 3px; height: 3px; border-radius: 50%; background: #f59b3a; }
 .calendar-grid span.is-selected { background: #143b65; color: #fff; font-weight: 700; }
-.calendar-legend { display: flex; gap: 15px; padding: 10px 18px; color: #8994a0; font-size: .68rem; }
+.calendar-legend { height: 45px; display: flex; align-items: center; gap: 15px; padding: 8px 18px; color: #8994a0; font-size: .8rem; }
 .calendar-legend span:first-child { color: #143b65; }
-.next-lecture { margin: 0 18px; padding: 9px 14px; border-radius: 10px; background: #173f6d; color: #fff; display: flex; align-items: end; justify-content: space-between; gap: 12px; }
+.next-lecture { height: 76px; margin: 0 18px; padding: 12px 16px; border-radius: 13px; background: #173f6d; color: #fff; display: flex; align-items: end; justify-content: space-between; gap: 12px; }
 .next-lecture span { display: grid; gap: 3px; }
 .next-lecture small { color: #a9b8c9; font-size: .65rem; }
 .next-lecture strong { font-size: .78rem; }
@@ -303,6 +307,7 @@ td {
   .student-dashboard__top { grid-template-columns: 1fr; }
   .student-dashboard__workspace { height: auto; }
   .student-dashboard__top { height: auto; }
+  .student-calendar { width: 100%; height: 524px; }
   .student-tasks { height: auto; min-height: 210px; }
   .student-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
   .student-summary > div { width: 100%; }

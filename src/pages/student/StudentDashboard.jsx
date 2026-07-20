@@ -49,6 +49,10 @@ function HeaderAsset({ file }) {
   return <img className="student-summary__icon" src={`/assets/icons/header/${file}`} alt="" aria-hidden="true" />;
 }
 
+function BodyAsset({ file, className = "" }) {
+  return <img className={className} src={`/assets/icons/body/${file}`} alt="" aria-hidden="true" />;
+}
+
 function TopicSummary({ topic }) {
   if (topic === "აპლიკაციის ინტერფეისი დიზაინი") {
     return <p><span className="student-summary__topic-line"><strong>თემა:</strong> აპლიკაციის</span><span className="student-summary__topic-line">ინტერფეისი დიზაინი</span></p>;
@@ -62,10 +66,12 @@ function buildMonthDays(activeDate, lectures) {
   const firstDay = new Date(year, month, 1);
   const mondayIndex = (firstDay.getDay() + 6) % 7;
   const gridStart = new Date(year, month, 1 - mondayIndex);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const cellCount = Math.ceil((mondayIndex + daysInMonth) / 7) * 7;
   const eventDates = new Set(lectures.map((lecture) => dateKey(lecture.date)).filter(Boolean));
   const selectedKey = dateKey(activeDate);
 
-  return Array.from({ length: 42 }, (_, index) => {
+  return Array.from({ length: cellCount }, (_, index) => {
     const date = new Date(gridStart);
     date.setDate(gridStart.getDate() + index);
     const key = dateKey(date);
@@ -103,7 +109,7 @@ function CalendarCard({ lectures, nextLecture }) {
   const moveMonth = (offset) => setActiveDate((date) => new Date(date.getFullYear(), date.getMonth() + offset, 1));
 
   return <section className="student-card student-calendar">
-    <header className="student-card__header"><h2>ლექციების კალენდარი <span aria-hidden="true">▦</span></h2><div className="calendar-switcher"><button onClick={() => moveMonth(-1)} aria-label="წინა თვე">‹</button><strong>{MONTHS[activeDate.getMonth()]} {activeDate.getFullYear()}</strong><button onClick={() => moveMonth(1)} aria-label="შემდეგი თვე">›</button></div></header>
+    <header className="student-card__header"><h2>ლექციების კალენდარი <BodyAsset file="calendar.svg" className="student-calendar__title-icon" /></h2><div className="calendar-switcher"><button onClick={() => moveMonth(-1)} aria-label="წინა თვე">‹</button><strong>{MONTHS[activeDate.getMonth()]} {activeDate.getFullYear()}</strong><button onClick={() => moveMonth(1)} aria-label="შემდეგი თვე">›</button></div></header>
     <div className="calendar-weekdays">{WEEKDAYS.map((day) => <span key={day}>{day}</span>)}</div>
     <div className="calendar-grid">{days.map((item) => <span key={item.key} className={`${item.muted ? "is-muted" : ""} ${item.event ? "has-event" : ""} ${item.selected ? "is-selected" : ""}`}>{item.day}</span>)}</div>
     <div className="calendar-legend"><span>● არჩეული დღე</span><span>● ლექციის დღე</span></div>
