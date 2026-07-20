@@ -1,0 +1,11 @@
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.5 13.5C6.15685 13.5 7.5 12.1569 7.5 10.5C7.5 8.84315 6.15685 7.5 4.5 7.5C2.84315 7.5 1.5 8.84315 1.5 10.5C1.5 12.1569 2.84315 13.5 4.5 13.5Z" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M31.5 13.5C33.1569 13.5 34.5 12.1569 34.5 10.5C34.5 8.84315 33.1569 7.5 31.5 7.5C29.8431 7.5 28.5 8.84315 28.5 10.5C28.5 12.1569 29.8431 13.5 31.5 13.5Z" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M28.5 10.5H22.5" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M13.5 10.5H7.5" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M11.25 24.75V27.75C11.25 28.665 10.695 29.46 9.915 29.79C9.63 29.925 9.33 30 9 30H6C4.755 30 3.75 28.995 3.75 27.75V24.75C3.75 23.505 4.755 22.5 6 22.5H9C10.245 22.5 11.25 23.505 11.25 24.75Z" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M32.25 24.75V27.75C32.25 28.995 31.245 30 30 30H27C26.67 30 26.37 29.925 26.085 29.79C25.305 29.46 24.75 28.665 24.75 27.75V24.75C24.75 23.505 25.755 22.5 27 22.5H30C31.245 22.5 32.25 23.505 32.25 24.75Z" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M22.5 8.25V12.75C22.5 13.98 21.48 15 20.25 15H15.75C14.52 15 13.5 13.98 13.5 12.75V8.25C13.5 7.02 14.52 6 15.75 6H20.25C21.48 6 22.5 7.02 22.5 8.25Z" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M22.5 11.595C26.055 13.395 28.5 17.265 28.5 21.75C28.5 22.005 28.485 22.245 28.455 22.5" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M7.545 22.5C7.515 22.245 7.5 22.005 7.5 21.75C7.5 17.265 9.945 13.395 13.5 11.595" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
