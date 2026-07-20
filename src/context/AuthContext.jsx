@@ -5,6 +5,11 @@ export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
+    const isStudentPreview = import.meta.env.DEV && new URLSearchParams(window.location.search).get("preview") === "student";
+    if (isStudentPreview) {
+      return { firstName: "ანა", lastName: "აბაშიძე", role: "student" };
+    }
+
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
   });
