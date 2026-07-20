@@ -322,17 +322,27 @@ td {
 .student-dashboard-state .student-brand { display: inline-block; margin-bottom: 1rem; }
 .student-dashboard-state button { padding: .7rem 1.2rem; border: 0; border-radius: 8px; background: #194d76; color: #fff; font: inherit; cursor: pointer; }
 
-@media (max-width: 1050px) {
-  .student-dashboard { grid-template-columns: 240px minmax(0, 1fr); padding: 18px; }
+@media (max-width: 1430px) {
+  .student-dashboard { grid-template-columns: 240px minmax(0, 1fr); gap: 20px; padding: 18px; }
+  .student-sidebar { min-height: calc(100vh - 36px); }
+  .student-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .student-summary > div { width: 100%; }
+  .student-summary p { font-size: 16px; line-height: 22px; }
+}
+
+@media (max-width: 1320px) {
+  .student-dashboard__top { grid-template-columns: minmax(0, 1fr) 358px; }
+  .student-calendar { width: 100%; }
+  .calendar-grid span { width: min(76px, 100%); }
+}
+
+@media (max-width: 1180px) {
   .student-dashboard__top { grid-template-columns: 1fr; }
   .student-dashboard__workspace { height: auto; }
   .student-dashboard__top { height: auto; }
   .student-calendar { width: 100%; height: 524px; }
   .student-deadline { width: 100%; height: 524px; }
   .student-tasks { height: auto; min-height: 210px; }
-  .student-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-  .student-summary > div { width: 100%; }
-  .student-summary p { font-size: 16px; line-height: 22px; }
 }
 
 @media (max-width: 760px) {
