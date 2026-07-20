@@ -175,7 +175,6 @@ td {
   place-items: center;
   background: #f2f2f2;
 }
-.student-profile__avatar::before { content: ""; position: absolute; left: -14px; bottom: 12px; width: 16px; border-top: 3px dotted #9b35ff; }
 .student-profile__avatar svg { width: 88px; height: 88px; fill: none; stroke: #292d32; stroke-width: 1.5; }
 .student-profile__edit { position: absolute; z-index: 1; top: -5px; right: 7px; width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; }
 .student-profile__edit svg { width: 24px; height: 24px; fill: none; stroke: #292d32; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
