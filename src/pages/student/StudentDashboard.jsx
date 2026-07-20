@@ -1,144 +1,114 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import api from "../../services/api";
+import { useStudentDashboard } from "../../hooks/useStudentDashboard";
+import { submitAssignment } from "../../services/student.service";
 
+const WEEKDAYS = ["ორშ", "სამ", "ოთხ", "ხუთ", "პარ", "შაბ", "კვ"];
+const MONTHS = ["იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი", "ივლისი", "აგვისტო", "სექტემბერი", "ოქტომბერი", "ნოემბერი", "დეკემბერი"];
 const menuItems = [
   { to: "/student", icon: "▦", label: "Dashboard", end: true },
-  { to: "/student/assignments", icon: "◇", label: "კურსი: UI/UX დიზაინი" },
-  { to: "/student/grades", icon: "♧", label: "ქულები: მოკლე" },
-  { to: "/student/assignments", icon: "▱", label: "შეტყობინებები" },
-  { to: "/student/grades", icon: "⌘", label: "ფინანსები" },
+  { to: "/student/assignments", icon: "◇", label: "ჩემი დავალებები" },
+  { to: "/student/grades", icon: "♧", label: "ჩემი შეფასებები" },
 ];
 
-const calendarDays = [
-  { day: 29, muted: true }, { day: 30, muted: true }, { day: 1, event: true }, { day: 2 }, { day: 3, event: true }, { day: 4 }, { day: 5 },
-  { day: 6 }, { day: 7, event: true }, { day: 8 }, { day: 9, event: true }, { day: 10 }, { day: 11 }, { day: 12 },
-  { day: 13 }, { day: 14, event: true }, { day: 15 }, { day: 16 }, { day: 17, selected: true }, { day: 18 }, { day: 19 },
-  { day: 20 }, { day: 21, event: true }, { day: 22 }, { day: 23, event: true }, { day: 24 }, { day: 25 }, { day: 26 },
-  { day: 27 }, { day: 28, event: true }, { day: 29 }, { day: 30, event: true }, { day: 31 },
-];
+const formatDate = (value) => value ? new Intl.DateTimeFormat("ka-GE").format(new Date(value)) : "არ არის მითითებული";
+const formatTime = (value) => value ? new Intl.DateTimeFormat("ka-GE", { hour: "2-digit", minute: "2-digit" }).format(new Date(value)) : "--:--";
+const dateKey = (value) => {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+};
+
+function buildMonthDays(activeDate, lectures) {
+  const year = activeDate.getFullYear();
+  const month = activeDate.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const mondayIndex = (firstDay.getDay() + 6) % 7;
+  const gridStart = new Date(year, month, 1 - mondayIndex);
+  const eventDates = new Set(lectures.map((lecture) => dateKey(lecture.date)).filter(Boolean));
+  const selectedKey = dateKey(activeDate);
+
+  return Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(gridStart);
+    date.setDate(gridStart.getDate() + index);
+    const key = dateKey(date);
+    return { key, day: date.getDate(), muted: date.getMonth() !== month, event: eventDates.has(key), selected: key === selectedKey };
+  });
+}
 
 function ProgressBar({ label, value, detail, tone = "yellow" }) {
-  return (
-    <div className="student-progress">
-      <div className="student-progress__value">{value}%</div>
-      <div className="student-progress__track"><span className={`is-${tone}`} style={{ width: `${value}%` }} /></div>
-      <p>{label}: {value}%.</p>
-      <small>{detail}</small>
-    </div>
-  );
+  const safeValue = Math.min(100, Math.max(0, value));
+  return <div className="student-progress"><div className="student-progress__value">{safeValue}%</div><div className="student-progress__track"><span className={`is-${tone}`} style={{ width: `${safeValue}%` }} /></div><p>{label}: {safeValue}%.</p><small>{detail}</small></div>;
 }
 
-function Sidebar({ user, attendance, progress }) {
-  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "ანა აბაშიძე";
-
-  return (
-    <aside className="student-sidebar">
-      <div className="student-brand">EduCity</div>
-      <h2>ჩემი პროფილი</h2>
-      <div className="student-profile">
-        <div className="student-profile__avatar" aria-hidden="true">♙</div>
-        <strong>{fullName}</strong>
-      </div>
-      <nav className="student-menu" aria-label="სტუდენტის მენიუ">
-        {menuItems.map((item, index) => (
-          <NavLink key={`${item.to}-${index}`} to={item.to} end={item.end} className={({ isActive }) => isActive && index === 0 ? "is-active" : ""}>
-            <span aria-hidden="true">{item.icon}</span>{item.label}
-          </NavLink>
-        ))}
-      </nav>
-      <section className="student-progress-section">
-        <h3>⌁ ჩემი პროგრესი</h3>
-        <ProgressBar label="დასწრება" value={attendance} detail="(ჩატარებული ლექციებიდან)" />
-        <ProgressBar label="კურსის პროგრესი" value={progress} detail="(შესრულებული დავალებებიდან)" tone="orange" />
-      </section>
-    </aside>
-  );
-}
-
-function CalendarCard() {
-  return (
-    <section className="student-card student-calendar">
-      <header className="student-card__header">
-        <h2>ლექციების კალენდარი <span aria-hidden="true">▦</span></h2>
-        <div className="calendar-switcher"><button aria-label="წინა თვე">‹</button><strong>ივლისი 2026</strong><button aria-label="შემდეგი თვე">›</button></div>
-      </header>
-      <div className="calendar-weekdays">{["ორშ", "სამ", "ოთხ", "ხუთ", "პარ", "შაბ", "კვ"].map((day) => <span key={day}>{day}</span>)}</div>
-      <div className="calendar-grid">
-        {calendarDays.map((item, index) => <span key={index} className={`${item.muted ? "is-muted" : ""} ${item.event ? "has-event" : ""} ${item.selected ? "is-selected" : ""}`}>{item.day}</span>)}
-      </div>
-      <div className="calendar-legend"><span>● დღეს</span><span>● ლექციის დღე</span></div>
-      <div className="next-lecture"><span><small>უახლოესი ლექცია</small><strong>UI/UX დიზაინი — მობილური აპლიკაცია</strong></span><b>17:00</b></div>
+function Sidebar({ student, attendance, progress }) {
+  const fullName = [student.firstName, student.lastName].filter(Boolean).join(" ");
+  return <aside className="student-sidebar">
+    <div className="student-brand">EduCity</div><h2>ჩემი პროფილი</h2>
+    <div className="student-profile"><div className="student-profile__avatar" aria-hidden="true">♙</div><strong>{fullName}</strong></div>
+    <nav className="student-menu" aria-label="სტუდენტის მენიუ">{menuItems.map((item) => <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => isActive ? "is-active" : ""}><span aria-hidden="true">{item.icon}</span>{item.label}</NavLink>)}</nav>
+    <section className="student-progress-section"><h3>⌁ ჩემი პროგრესი</h3>
+      <ProgressBar label="დასწრება" value={attendance.percentage} detail={`${attendance.attended}/${attendance.held} ჩატარებული ლექციიდან`} />
+      <ProgressBar label="კურსის პროგრესი" value={progress.percentage} detail={`${progress.completed}/${progress.total} დავალება`} tone="orange" />
     </section>
-  );
+  </aside>;
 }
 
-function AssignmentCard() {
-  return (
-    <section className="student-card student-deadline">
-      <header className="student-card__header"><h2>წინა ლექცია</h2><time>14.07.2026</time></header>
-      <article>
-        <h3>▱ დავალება #5: dashboard UX wireframe</h3>
-        <p><strong>აღწერა:</strong> შექმენით სტუდენტის დემო-გვერდის სტრუქტურა</p>
-        <p>⌛ <strong>deadline:</strong> 21.07.2026</p>
-        <div className="upload-file">♧ ატვირთე ფაილი <small>PDF, PNG, DRIVE</small></div>
-        <p className="status-line">◷ <strong>STATUS:</strong> მიმდინარე / ჩასაბარებელი</p>
-      </article>
-      <article className="lecture-task">
-        <h3>▱ წინა დავალების შეფასება</h3>
-        <p>დავალება #6: “Color Palette &amp; Typography” <b>8/10</b></p>
-        <button>✓ გახსენი ლექტორის კომენტარი</button>
-      </article>
-    </section>
-  );
+function CalendarCard({ lectures, nextLecture }) {
+  const initialDate = nextLecture?.date ? new Date(nextLecture.date) : new Date();
+  const [activeDate, setActiveDate] = useState(initialDate);
+  const days = useMemo(() => buildMonthDays(activeDate, lectures), [activeDate, lectures]);
+  const moveMonth = (offset) => setActiveDate((date) => new Date(date.getFullYear(), date.getMonth() + offset, 1));
+
+  return <section className="student-card student-calendar">
+    <header className="student-card__header"><h2>ლექციების კალენდარი <span aria-hidden="true">▦</span></h2><div className="calendar-switcher"><button onClick={() => moveMonth(-1)} aria-label="წინა თვე">‹</button><strong>{MONTHS[activeDate.getMonth()]} {activeDate.getFullYear()}</strong><button onClick={() => moveMonth(1)} aria-label="შემდეგი თვე">›</button></div></header>
+    <div className="calendar-weekdays">{WEEKDAYS.map((day) => <span key={day}>{day}</span>)}</div>
+    <div className="calendar-grid">{days.map((item) => <span key={item.key} className={`${item.muted ? "is-muted" : ""} ${item.event ? "has-event" : ""} ${item.selected ? "is-selected" : ""}`}>{item.day}</span>)}</div>
+    <div className="calendar-legend"><span>● არჩეული დღე</span><span>● ლექციის დღე</span></div>
+    <div className="next-lecture"><span><small>უახლოესი ლექცია</small><strong>{nextLecture ? `${nextLecture.title} — ${nextLecture.topic}` : "ლექცია დაგეგმილი არ არის"}</strong></span><b>{formatTime(nextLecture?.date)}</b></div>
+  </section>;
 }
 
-function TasksPanel() {
-  return (
-    <section className="student-tasks">
-      <aside>
-        <strong>▱ TASKS</strong><button>⊕ CREATE</button><button>✓ ALL TASKS</button><button>★ STARRED</button>
-      </aside>
-      <div className="student-tasks__list">
-        <h3>MY TASKS</h3><button className="add-task">ADD TASK ＋</button><hr />
-        <label><input type="checkbox" /> RAGHAC TASKI</label>
-        <label><input type="checkbox" defaultChecked /> RAGHAC TASKI</label>
-        <small>⚑ COMPLETED</small>
-      </div>
-    </section>
-  );
+function AssignmentCard({ assignment, recentGrade, onUploaded }) {
+  const inputRef = useRef(null);
+  const [upload, setUpload] = useState({ loading: false, error: null });
+
+  async function handleFile(file) {
+    if (!file || !assignment?.id) return;
+    setUpload({ loading: true, error: null });
+    try { await submitAssignment(assignment.id, file); setUpload({ loading: false, error: null }); onUploaded(); }
+    catch (error) { setUpload({ loading: false, error }); }
+  }
+
+  return <section className="student-card student-deadline">
+    <header className="student-card__header"><h2>მიმდინარე დავალება</h2><time>{formatDate(assignment?.dueDate)}</time></header>
+    {assignment ? <article><h3>▱ {assignment.title}</h3><p><strong>აღწერა:</strong> {assignment.description}</p><p>⌛ <strong>deadline:</strong> {formatDate(assignment.dueDate)}</p>
+      <input ref={inputRef} className="visually-hidden" type="file" onChange={(event) => handleFile(event.target.files?.[0])} />
+      <button className="upload-file" disabled={upload.loading || Boolean(assignment.submission)} onClick={() => inputRef.current?.click()}>♧ {upload.loading ? "იტვირთება..." : assignment.submission ? "დავალება ჩაბარებულია" : "ატვირთე ფაილი"} <small>{assignment.allowedFileTypes.join(", ")}</small></button>
+      {upload.error && <p className="dashboard-inline-error">ფაილი ვერ აიტვირთა. სცადეთ ხელახლა.</p>}
+      <p className="status-line">◷ <strong>STATUS:</strong> {assignment.submission?.status || "ჩასაბარებელი"}</p></article> : <article><p>აქტიური დავალება არ არის.</p></article>}
+    {recentGrade && <article className="lecture-task"><h3>▱ ბოლო შეფასება</h3><p>{recentGrade.title} <b>{recentGrade.submission.score}/10</b></p><button type="button">✓ ლექტორის კომენტარი</button></article>}
+  </section>;
+}
+
+function TasksPanel({ tasks }) {
+  return <section className="student-tasks"><aside><strong>▱ TASKS</strong><button>⊕ CREATE</button><button>✓ ALL TASKS</button><button>★ STARRED</button></aside><div className="student-tasks__list"><h3>MY TASKS</h3><button className="add-task">ADD TASK ＋</button><hr />
+    {tasks.length ? tasks.map((task) => <label key={task._id || task.id || task.title}><input type="checkbox" checked={Boolean(task.completed)} readOnly /> {task.title}</label>) : <p className="student-tasks__empty">დავალებები ჯერ არ არის</p>}<small>⚑ COMPLETED</small>
+  </div></section>;
+}
+
+function DashboardState({ message, onRetry }) {
+  return <main className="student-dashboard-state"><div><div className="student-brand">EduCity</div><p>{message}</p>{onRetry && <button onClick={onRetry}>ხელახლა ცდა</button>}</div></main>;
 }
 
 export default function StudentDashboard() {
   const { user } = useAuth();
-  const [data, setData] = useState(null);
+  const { data, loading, error, retry } = useStudentDashboard(user);
+  if (loading && !data) return <DashboardState message="Dashboard იტვირთება..." />;
+  if (error || !data) return <DashboardState message="Dashboard-ის მონაცემები ვერ ჩაიტვირთა." onRetry={retry} />;
 
-  useEffect(() => {
-    let active = true;
-    api.get("/student/dashboard").then((res) => active && setData(res.data)).catch(() => active && setData({}));
-    return () => { active = false; };
-  }, []);
-
-  const stats = useMemo(() => ({
-    attendance: Math.round(data?.attendance?.percentage ?? 87.5),
-    progress: Math.round(data?.progress?.percentage ?? 66),
-  }), [data]);
-
-  return (
-    <main className="student-dashboard">
-      <Sidebar user={user} {...stats} />
-      <div className="student-dashboard__content">
-        <header className="student-summary">
-          <div><span className="summary-icon is-yellow">♧</span><p><strong>შემდეგი ლექცია:</strong><b>დღეს 17:00</b></p></div>
-          <div><span className="summary-icon is-green">♧</span><p><strong>თემა:</strong> აპლიკაციის<br />ინტერაქციული დიზაინი</p></div>
-          <div><span className="summary-icon is-blue">▱</span><p><strong>დავალებების პანელი</strong></p></div>
-        </header>
-        <div className="student-dashboard__workspace">
-          <div className="student-dashboard__top"><CalendarCard /><AssignmentCard /></div>
-          <TasksPanel />
-        </div>
-      </div>
-    </main>
-  );
+  return <main className="student-dashboard"><Sidebar student={data.student} attendance={data.attendance} progress={data.progress} /><div className="student-dashboard__content">
+    <header className="student-summary"><div><span className="summary-icon is-yellow">♧</span><p><strong>შემდეგი ლექცია:</strong><b>{data.nextLecture ? `${formatDate(data.nextLecture.date)} ${formatTime(data.nextLecture.date)}` : "დაგეგმილი არ არის"}</b></p></div><div><span className="summary-icon is-green">♧</span><p><strong>თემა:</strong>{data.nextLecture?.topic || "არ არის მითითებული"}</p></div><div><span className="summary-icon is-blue">▱</span><p><strong>დავალებები:</strong>{data.assignments.length} აქტიური ჩანაწერი</p></div></header>
+    <div className="student-dashboard__workspace"><div className="student-dashboard__top"><CalendarCard lectures={data.lectures} nextLecture={data.nextLecture} /><AssignmentCard assignment={data.latestAssignment} recentGrade={data.recentGrade} onUploaded={retry} /></div><TasksPanel tasks={data.tasks} /></div>
+  </div></main>;
 }
