@@ -1,16 +1,17 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 export function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   function handleLogout() {
     logout();
     navigate("/login");
   }
 
-  if (!user) return null; // no chrome on the landing/login/register pages
+  if (!user || location.pathname.startsWith("/student")) return null;
 
   return (
     <nav className="navbar">
