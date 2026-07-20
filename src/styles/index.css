@@ -129,7 +129,7 @@ td {
 }
 
 .student-sidebar {
-  min-height: calc(100vh - 48px);
+  min-height: calc(100vh - 51px);
   padding: 33px 11px 30px;
   border-radius: 16px;
   background: var(--sidebar);
@@ -238,8 +238,8 @@ td {
 .student-summary__assignments p { white-space: nowrap; }
 
 .student-dashboard__workspace {
-  flex: none;
-  height: 750px;
+  flex: 1;
+  height: auto;
   padding: 25px 20px 20px;
   border-radius: 16px;
   background: #f4f4f4;
