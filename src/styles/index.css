@@ -177,7 +177,7 @@ td {
 }
 .student-profile__avatar svg { width: 88px; height: 88px; fill: none; stroke: #292d32; stroke-width: 1.5; }
 .student-profile__edit { position: absolute; z-index: 1; top: -5px; right: 7px; width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; }
-.student-profile__edit svg { width: 24px; height: 24px; fill: none; stroke: #292d32; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.student-profile__edit img { display: block; width: 24px; height: 24px; }
 .student-profile strong { display: flex; flex-direction: column; align-items: center; max-width: 167px; margin: auto; color: #f6f7f9; font-size: 20px; line-height: 27px; }
 .student-profile strong span { display: block; }
 
@@ -197,12 +197,12 @@ td {
   font-weight: 700;
 }
 .student-menu a:first-child { margin-bottom: 8px; font-size: 16px; color: rgba(0, 0, 0, .7); }
-.student-menu__icon { flex: 0 0 24px; width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.student-menu__icon { flex: 0 0 24px; display: block; width: 24px; height: 24px; }
 .student-menu a:hover, .student-menu a.is-active { background: #f7f7f7; color: #21384f; }
 
 .student-progress-section { width: 248px; margin: 27px auto 0; padding: 0; }
 .student-progress-section h3 { margin: 0 0 22px 1px; display: flex; align-items: center; gap: 15px; color: #f2f2f2; font-size: 20px; line-height: 27px; }
-.student-progress-section h3 svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.student-progress-section h3 img { display: block; width: 24px; height: 24px; }
 .student-progress { margin-bottom: 26px; color: #fff; font-size: 14px; line-height: 19px; }
 .student-progress__value { width: 52px; margin: 0 18px 4px auto; text-align: center; font-weight: 700; }
 .student-progress__track { width: 248px; height: 10px; overflow: hidden; border-radius: 16px; background: #d9d9d9; }

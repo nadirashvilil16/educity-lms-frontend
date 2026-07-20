@@ -7,11 +7,11 @@ import { submitAssignment } from "../../services/student.service";
 const WEEKDAYS = ["ორშ", "სამ", "ოთხ", "ხუთ", "პარ", "შაბ", "კვ"];
 const MONTHS = ["იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი", "ივლისი", "აგვისტო", "სექტემბერი", "ოქტომბერი", "ნოემბერი", "დეკემბერი"];
 const menuItems = [
-  { to: "/student", icon: "dashboard", label: "Dashboard", end: true },
-  { icon: "course", label: "კურსი: UI/UX დიზაინი" },
-  { icon: "group", label: "ჯგუფი: მეორე" },
-  { icon: "messages", label: "შეტყობინებები" },
-  { icon: "finance", label: "ფინანსები" },
+  { to: "/student", icon: "category-2.svg", label: "Dashboard", end: true },
+  { icon: "tag-right.svg", label: "კურსი: UI/UX დიზაინი" },
+  { icon: "people.svg", label: "ჯგუფი: მეორე" },
+  { icon: "messages.svg", label: "შეტყობინებები" },
+  { icon: "card-coin.svg", label: "ფინანსები" },
 ];
 
 const formatDate = (value) => value ? new Intl.DateTimeFormat("ka-GE").format(new Date(value)) : "არ არის მითითებული";
@@ -34,23 +34,8 @@ function ProfileIcon() {
   </svg>;
 }
 
-function EditIcon() {
-  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.3 5.2 18.8 10.7M4 20h4.2L19 9.2a2.8 2.8 0 0 0-4-4L4.2 16 4 20Z" /><path d="M12 4H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-5" /></svg>;
-}
-
-function SidebarIcon({ name }) {
-  const paths = {
-    dashboard: <><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><rect x="14" y="14" width="7" height="7" rx="2" /></>,
-    course: <path d="M7 4h9l5 8-5 8H7l-4-8 4-8Z" />,
-    group: <><circle cx="8" cy="7" r="3" /><circle cx="17" cy="7" r="3" /><circle cx="12.5" cy="14" r="3" /><path d="M3 18c.8-2.5 2.5-3.8 5-3.8M22 18c-.8-2.5-2.5-3.8-5-3.8M7 22c.8-3 2.6-4.5 5.5-4.5S17.2 19 18 22" /></>,
-    messages: <><path d="M4 6.5A3.5 3.5 0 0 1 7.5 3h9A3.5 3.5 0 0 1 20 6.5v6a3.5 3.5 0 0 1-3.5 3.5H10l-4 4v-4.3A3.5 3.5 0 0 1 4 12.5v-6Z" /><path d="M8 10h.1M12 10h.1M16 10h.1" /></>,
-    finance: <><path d="M3 9h8a4 4 0 0 1 4 4v7H7a4 4 0 0 1-4-4V9Z" /><path d="M3 13h12M7 5a4 4 0 0 1 4-2M18 4a3 3 0 1 1-3 3" /><path d="M18 14h3v4h-3" /></>,
-  };
-  return <svg className="student-menu__icon" viewBox="0 0 24 24" aria-hidden="true">{paths[name]}</svg>;
-}
-
-function ProgressIcon() {
-  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18" /><path d="m6 16 4-5 4 2 6-7" /><path d="m16.5 6 3.5-.2-.2 3.5" /></svg>;
+function SidebarAsset({ file, className = "" }) {
+  return <img className={className} src={`/assets/icons/sidebar/${file}`} alt="" aria-hidden="true" />;
 }
 
 function buildMonthDays(activeDate, lectures) {
@@ -79,14 +64,14 @@ function Sidebar({ student, attendance, progress }) {
   return <aside className="student-sidebar">
     <EduCityLogo /><h2>ჩემი პროფილი</h2>
     <div className="student-profile">
-      <button className="student-profile__edit" type="button" aria-label="პროფილის რედაქტირება"><EditIcon /></button>
+      <button className="student-profile__edit" type="button" aria-label="პროფილის რედაქტირება"><SidebarAsset file="edit.svg" /></button>
       <div className="student-profile__avatar"><ProfileIcon /></div>
       <strong><span>{student.firstName}</span><span>{student.lastName}</span></strong>
     </div>
     <nav className="student-menu" aria-label="სტუდენტის მენიუ">{menuItems.map((item) => item.to
-      ? <NavLink key={item.label} to={item.to} end={item.end} className={({ isActive }) => isActive ? "is-active" : ""}><SidebarIcon name={item.icon} />{item.label}</NavLink>
-      : <span className="student-menu__item" key={item.label}><SidebarIcon name={item.icon} />{item.label}</span>)}</nav>
-    <section className="student-progress-section"><h3><ProgressIcon /> ჩემი პროგრესი</h3>
+      ? <NavLink key={item.label} to={item.to} end={item.end} className={({ isActive }) => isActive ? "is-active" : ""}><SidebarAsset file={item.icon} className="student-menu__icon" />{item.label}</NavLink>
+      : <span className="student-menu__item" key={item.label}><SidebarAsset file={item.icon} className="student-menu__icon" />{item.label}</span>)}</nav>
+    <section className="student-progress-section"><h3><SidebarAsset file="diagram.svg" /> ჩემი პროგრესი</h3>
       <ProgressBar label="დასწრება" value={attendance.percentage} detail={`(ჩატარებული ${attendance.attended}/${attendance.held})`} />
       <ProgressBar label="კურსის პროგრესი" value={progress.percentage} detail={`(ჩატარდა ${progress.completed}/${progress.total} ლექციიდან)`} tone="orange" />
     </section>
