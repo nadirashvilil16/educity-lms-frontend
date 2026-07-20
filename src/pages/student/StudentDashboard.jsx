@@ -26,7 +26,12 @@ function EduCityLogo() {
 }
 
 function ProfileIcon() {
-  return <svg viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="36.7" /><circle cx="44" cy="32.5" r="11.5" /><path d="M19.3 67.1c5.2-10.4 14-15.6 24.7-15.6s19.5 5.2 24.7 15.6" /></svg>;
+  return <svg viewBox="0 0 88 88" aria-hidden="true">
+    <defs><clipPath id="student-profile-circle"><circle cx="44" cy="44" r="36.67" /></clipPath></defs>
+    <circle cx="44" cy="44" r="36.67" />
+    <circle cx="44" cy="34.64" r="12.03" />
+    <path clipPath="url(#student-profile-circle)" d="M19.29 80.67c2.73-15.31 11.01-24.08 24.71-24.08s21.98 8.77 24.71 24.08" />
+  </svg>;
 }
 
 function EditIcon() {
@@ -71,12 +76,12 @@ function ProgressBar({ label, value, detail, tone = "yellow" }) {
 }
 
 function Sidebar({ student, attendance, progress }) {
-  const fullName = [student.firstName, student.lastName].filter(Boolean).join(" ");
   return <aside className="student-sidebar">
     <EduCityLogo /><h2>ჩემი პროფილი</h2>
     <div className="student-profile">
       <button className="student-profile__edit" type="button" aria-label="პროფილის რედაქტირება"><EditIcon /></button>
-      <div className="student-profile__avatar"><ProfileIcon /></div><strong>{fullName}</strong>
+      <div className="student-profile__avatar"><ProfileIcon /></div>
+      <strong><span>{student.firstName}</span><span>{student.lastName}</span></strong>
     </div>
     <nav className="student-menu" aria-label="სტუდენტის მენიუ">{menuItems.map((item) => item.to
       ? <NavLink key={item.label} to={item.to} end={item.end} className={({ isActive }) => isActive ? "is-active" : ""}><SidebarIcon name={item.icon} />{item.label}</NavLink>
