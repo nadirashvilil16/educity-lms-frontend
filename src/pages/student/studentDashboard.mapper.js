@@ -16,6 +16,7 @@ function normalizeLecture(lecture) {
 function normalizeAssignment(assignment) {
   return {
     id: assignment._id || assignment.id,
+    number: assignment.number || assignment.order || assignment.sequence || null,
     title: assignment.title || "დავალება",
     description: assignment.description || "აღწერა არ არის მითითებული",
     dueDate: assignment.dueDate || assignment.deadline || null,
@@ -58,6 +59,7 @@ export function mapStudentDashboard(payload = {}, sessionUser = null) {
       total: numberOr(progress.total),
     },
     nextLecture,
+    previousLectureDate: payload.previousLecture?.date || payload.previousLectureDate || null,
     lectures,
     assignments,
     latestAssignment: assignments[0] || null,
@@ -88,9 +90,11 @@ export const studentDashboardPreview = {
     { _id: "lecture-2", title: "UI/UX დიზაინი", date: "2026-07-21T17:00:00" },
     { _id: "lecture-3", title: "UI/UX დიზაინი", date: "2026-07-23T17:00:00" },
   ],
+  previousLectureDate: "2026-07-14T17:00:00",
   assignments: [
     {
       _id: "assignment-5",
+      number: 5,
       title: "dashboard UX wireframe",
       description: "შექმენით სტუდენტის დემო-გვერდის სტრუქტურა",
       dueDate: "2026-07-21",
@@ -98,6 +102,7 @@ export const studentDashboardPreview = {
     },
     {
       _id: "assignment-4",
+      number: 6,
       title: "Color Palette & Typography",
       submission: { status: "graded", score: 8 },
     },

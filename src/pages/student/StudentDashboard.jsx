@@ -14,7 +14,12 @@ const menuItems = [
   { icon: "card-coin.svg", label: "ფინანსები" },
 ];
 
-const formatDate = (value) => value ? new Intl.DateTimeFormat("ka-GE").format(new Date(value)) : "არ არის მითითებული";
+const formatDate = (value) => {
+  if (!value) return "არ არის მითითებული";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "არ არის მითითებული";
+  return [date.getDate(), date.getMonth() + 1, date.getFullYear()].map((part, index) => index < 2 ? String(part).padStart(2, "0") : part).join(".");
+};
 const formatTime = (value) => value ? new Intl.DateTimeFormat("ka-GE", { hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(value)) : "--:--";
 const formatLectureDay = (value) => {
   if (!value) return "დაგეგმილი არ არის";
@@ -117,7 +122,7 @@ function CalendarCard({ lectures, nextLecture }) {
   </section>;
 }
 
-function AssignmentCard({ assignment, recentGrade, onUploaded }) {
+function AssignmentCard({ assignment, recentGrade, previousLectureDate, onUploaded }) {
   const inputRef = useRef(null);
   const [upload, setUpload] = useState({ loading: false, error: null });
 
@@ -129,13 +134,17 @@ function AssignmentCard({ assignment, recentGrade, onUploaded }) {
   }
 
   return <section className="student-card student-deadline">
-    <header className="student-card__header"><h2>მიმდინარე დავალება</h2><time>{formatDate(assignment?.dueDate)}</time></header>
-    {assignment ? <article><h3>▱ {assignment.title}</h3><p><strong>აღწერა:</strong> {assignment.description}</p><p>⌛ <strong>deadline:</strong> {formatDate(assignment.dueDate)}</p>
+    <header className="student-card__header"><h2>წინა ლექცია</h2><div className="student-deadline__date"><BodyAsset file="bookmark-2.svg" /><time>{formatDate(previousLectureDate)}</time></div></header>
+    {assignment ? <article className="student-deadline__current">
+      <h3><BodyAsset file="book-saved.svg" /><span><em>დავალება{assignment.number ? ` #${assignment.number}` : ""}:</em> {assignment.title}</span></h3>
+      <p className="student-deadline__description"><strong>აღწერა:</strong> {assignment.description}</p>
+      <p className="student-deadline__deadline"><BodyAsset file="timer.svg" /><span><strong>deadline:</strong> {formatDate(assignment.dueDate)}</span></p>
       <input ref={inputRef} className="visually-hidden" type="file" onChange={(event) => handleFile(event.target.files?.[0])} />
-      <button className="upload-file" disabled={upload.loading || Boolean(assignment.submission)} onClick={() => inputRef.current?.click()}>♧ {upload.loading ? "იტვირთება..." : assignment.submission ? "დავალება ჩაბარებულია" : "ატვირთე ფაილი"} <small>{assignment.allowedFileTypes.join(", ")}</small></button>
+      <button className="upload-file" disabled={upload.loading || Boolean(assignment.submission)} onClick={() => inputRef.current?.click()}><BodyAsset file="directbox-send.svg" /><span>{upload.loading ? "იტვირთება..." : assignment.submission ? "დავალება ჩაბარებულია" : "ატვირთე ფაილი"}</span><small>{assignment.allowedFileTypes.join(", ")}</small></button>
       {upload.error && <p className="dashboard-inline-error">ფაილი ვერ აიტვირთა. სცადეთ ხელახლა.</p>}
-      <p className="status-line">◷ <strong>STATUS:</strong> {assignment.submission?.status || "ჩასაბარებელი"}</p></article> : <article><p>აქტიური დავალება არ არის.</p></article>}
-    {recentGrade && <article className="lecture-task"><h3>▱ ბოლო შეფასება</h3><p>{recentGrade.title} <b>{recentGrade.submission.score}/10</b></p><button type="button">✓ ლექტორის კომენტარი</button></article>}
+      <div className="status-line"><BodyAsset file="clock.svg" /><strong>STATUS:</strong><span>{assignment.submission?.status || <>მოლოდინში/<br />ჩაბარებული/<br />ვადაგასული</>}</span></div>
+    </article> : <article><p>აქტიური დავალება არ არის.</p></article>}
+    {recentGrade && <article className="lecture-task"><h3><BodyAsset file="book-saved-1.svg" /><span>წინა დავალების შეფასება</span></h3><p>დავალება{recentGrade.number ? ` #${recentGrade.number}` : ""}: “{recentGrade.title}” <b>{recentGrade.submission.score}/10</b></p><button type="button"><BodyAsset file="import.svg" />გახსენით ლექტორის კომენტარი</button></article>}
   </section>;
 }
 
@@ -161,6 +170,6 @@ export default function StudentDashboard() {
       <div className="student-summary__topic"><HeaderAsset file="bezier.svg" /><TopicSummary topic={data.nextLecture?.topic} /></div>
       <div className="student-summary__assignments"><HeaderAsset file="book.svg" /><p><strong>დავალებების პანელი</strong></p></div>
     </header>
-    <div className="student-dashboard__workspace"><div className="student-dashboard__top"><CalendarCard lectures={data.lectures} nextLecture={data.nextLecture} /><AssignmentCard assignment={data.latestAssignment} recentGrade={data.recentGrade} onUploaded={retry} /></div><TasksPanel tasks={data.tasks} /></div>
+    <div className="student-dashboard__workspace"><div className="student-dashboard__top"><CalendarCard lectures={data.lectures} nextLecture={data.nextLecture} /><AssignmentCard assignment={data.latestAssignment} recentGrade={data.recentGrade} previousLectureDate={data.previousLectureDate} onUploaded={retry} /></div><TasksPanel tasks={data.tasks} /></div>
   </div></main>;
 }
