@@ -19,6 +19,18 @@ const dateKey = (value) => {
   return Number.isNaN(date.getTime()) ? null : `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 };
 
+function EduCityLogo() {
+  return <div className="student-brand"><img src="/assets/logos/educity-logo.svg" alt="EduCity" /></div>;
+}
+
+function ProfileIcon() {
+  return <svg viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="44" r="36.7" /><circle cx="44" cy="32.5" r="11.5" /><path d="M19.3 67.1c5.2-10.4 14-15.6 24.7-15.6s19.5 5.2 24.7 15.6" /></svg>;
+}
+
+function EditIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.3 5.2 18.8 10.7M4 20h4.2L19 9.2a2.8 2.8 0 0 0-4-4L4.2 16 4 20Z" /><path d="M12 4H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-5" /></svg>;
+}
+
 function buildMonthDays(activeDate, lectures) {
   const year = activeDate.getFullYear();
   const month = activeDate.getMonth();
@@ -44,8 +56,11 @@ function ProgressBar({ label, value, detail, tone = "yellow" }) {
 function Sidebar({ student, attendance, progress }) {
   const fullName = [student.firstName, student.lastName].filter(Boolean).join(" ");
   return <aside className="student-sidebar">
-    <div className="student-brand">EduCity</div><h2>ჩემი პროფილი</h2>
-    <div className="student-profile"><div className="student-profile__avatar" aria-hidden="true">♙</div><strong>{fullName}</strong></div>
+    <EduCityLogo /><h2>ჩემი პროფილი</h2>
+    <div className="student-profile">
+      <button className="student-profile__edit" type="button" aria-label="პროფილის რედაქტირება"><EditIcon /></button>
+      <div className="student-profile__avatar"><ProfileIcon /></div><strong>{fullName}</strong>
+    </div>
     <nav className="student-menu" aria-label="სტუდენტის მენიუ">{menuItems.map((item) => <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => isActive ? "is-active" : ""}><span aria-hidden="true">{item.icon}</span>{item.label}</NavLink>)}</nav>
     <section className="student-progress-section"><h3>⌁ ჩემი პროგრესი</h3>
       <ProgressBar label="დასწრება" value={attendance.percentage} detail={`${attendance.attended}/${attendance.held} ჩატარებული ლექციიდან`} />
@@ -98,7 +113,7 @@ function TasksPanel({ tasks }) {
 }
 
 function DashboardState({ message, onRetry }) {
-  return <main className="student-dashboard-state"><div><div className="student-brand">EduCity</div><p>{message}</p>{onRetry && <button onClick={onRetry}>ხელახლა ცდა</button>}</div></main>;
+  return <main className="student-dashboard-state"><div><EduCityLogo /><p>{message}</p>{onRetry && <button onClick={onRetry}>ხელახლა ცდა</button>}</div></main>;
 }
 
 export default function StudentDashboard() {
