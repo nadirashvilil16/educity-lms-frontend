@@ -238,12 +238,13 @@ td {
 .student-summary__assignments p { white-space: nowrap; }
 
 .student-dashboard__workspace {
-  flex: 1;
-  padding: 20px;
-  border-radius: 13px;
+  flex: none;
+  height: 750px;
+  padding: 25px 20px 20px;
+  border-radius: 16px;
   background: #f4f4f4;
 }
-.student-dashboard__top { display: grid; grid-template-columns: minmax(450px, 1.65fr) minmax(260px, .95fr); gap: 18px; }
+.student-dashboard__top { height: 460px; display: grid; grid-template-columns: minmax(0, 1.73fr) minmax(0, 1fr); gap: 18px; }
 .student-card { overflow: hidden; border: 9px solid #061d32; border-radius: 28px; background: #fff; }
 .student-card__header { min-height: 51px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 18px; border-bottom: 1px solid #dfe3e7; }
 .student-card__header h2 { margin: 0; font-size: 1rem; }
@@ -281,7 +282,7 @@ td {
 .lecture-task b { margin-left: 8px; color: #e86400; }
 .lecture-task button { width: 100%; padding: 6px; border: 0; border-radius: 6px; background: #59c77e; color: #fff; font-family: inherit; font-size: .68rem; }
 
-.student-tasks { min-height: 174px; margin-top: 12px; border-radius: 25px; background: #194d76; padding: 20px 24px 14px 12px; display: grid; grid-template-columns: 132px 1fr; gap: 34px; color: #17233a; }
+.student-tasks { height: 233px; min-height: 0; margin-top: 12px; border-radius: 28px; background: #194d76; padding: 25px 24px 17px 14px; display: grid; grid-template-columns: 160px 1fr; gap: 40px; color: #17233a; }
 .student-tasks aside { border-radius: 12px; overflow: hidden; background: #8898ba; display: flex; flex-direction: column; }
 .student-tasks aside strong, .student-tasks aside button { padding: 9px 12px; border: 0; border-bottom: 1px solid #d6dbea; background: transparent; color: inherit; text-align: left; font-family: inherit; font-size: .68rem; font-weight: 700; }
 .student-tasks__list { position: relative; padding: 26px 28px 10px; border-radius: 12px; background: #8998b9; display: flex; flex-direction: column; gap: 8px; }
@@ -300,6 +301,9 @@ td {
 @media (max-width: 1050px) {
   .student-dashboard { grid-template-columns: 240px minmax(0, 1fr); padding: 18px; }
   .student-dashboard__top { grid-template-columns: 1fr; }
+  .student-dashboard__workspace { height: auto; }
+  .student-dashboard__top { height: auto; }
+  .student-tasks { height: auto; min-height: 210px; }
   .student-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
   .student-summary > div { width: 100%; }
   .student-summary p { font-size: 16px; line-height: 22px; }
