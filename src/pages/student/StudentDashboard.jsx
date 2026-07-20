@@ -144,8 +144,8 @@ export default function StudentDashboard() {
 
   return <main className="student-dashboard"><Sidebar student={data.student} attendance={data.attendance} progress={data.progress} /><div className="student-dashboard__content">
     <header className="student-summary">
-      <div className="student-summary__lecture"><HeaderAsset file="Vector.svg" /><p><strong>შემდეგი ლექცია:</strong><b>{data.nextLecture ? `${formatLectureDay(data.nextLecture.date)} ${formatTime(data.nextLecture.date)}` : "დაგეგმილი არ არის"}</b></p></div>
-      <div className="student-summary__topic"><HeaderAsset file="bezier.svg" /><p><strong>თემა:</strong> {data.nextLecture?.topic || "არ არის მითითებული"}</p></div>
+      <div className="student-summary__lecture"><HeaderAsset file="notification.svg" /><p><strong>შემდეგი ლექცია:</strong><b>{data.nextLecture ? `${formatLectureDay(data.nextLecture.date)} ${formatTime(data.nextLecture.date)}` : "დაგეგმილი არ არის"}</b></p></div>
+      <div className="student-summary__topic"><HeaderAsset file="bezier.svg" /><p><strong>თემა:</strong> <span>{data.nextLecture?.topic || "არ არის მითითებული"}</span></p></div>
       <div className="student-summary__assignments"><HeaderAsset file="book.svg" /><p><strong>დავალებების პანელი</strong></p></div>
     </header>
     <div className="student-dashboard__workspace"><div className="student-dashboard__top"><CalendarCard lectures={data.lectures} nextLecture={data.nextLecture} /><AssignmentCard assignment={data.latestAssignment} recentGrade={data.recentGrade} onUploaded={retry} /></div><TasksPanel tasks={data.tasks} /></div>

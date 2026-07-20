@@ -228,8 +228,11 @@ td {
 .student-summary p { margin: 0; color: #000; font-size: 20px; line-height: 27px; font-weight: 700; }
 .student-summary p strong, .student-summary p b { display: block; font: inherit; }
 .student-summary__lecture p b { color: #e37200; }
-.student-summary__topic { gap: 29px !important; }
+.student-summary__lecture p { width: 238px; }
+.student-summary__topic { gap: 29px !important; padding-left: 21px !important; }
+.student-summary__topic p { width: 215px; }
 .student-summary__topic p strong { display: inline; color: #34a853; }
+.student-summary__topic p span { color: #000; }
 .student-summary__assignments { gap: 10px !important; padding-left: 12px !important; }
 .student-summary__assignments p { white-space: nowrap; }
 
