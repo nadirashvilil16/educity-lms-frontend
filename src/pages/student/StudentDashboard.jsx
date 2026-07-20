@@ -15,7 +15,7 @@ const menuItems = [
 ];
 
 const formatDate = (value) => value ? new Intl.DateTimeFormat("ka-GE").format(new Date(value)) : "არ არის მითითებული";
-const formatTime = (value) => value ? new Intl.DateTimeFormat("ka-GE", { hour: "2-digit", minute: "2-digit" }).format(new Date(value)) : "--:--";
+const formatTime = (value) => value ? new Intl.DateTimeFormat("ka-GE", { hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(value)) : "--:--";
 const formatLectureDay = (value) => {
   if (!value) return "დაგეგმილი არ არის";
   const date = new Date(value);
@@ -47,6 +47,13 @@ function SidebarAsset({ file, className = "" }) {
 
 function HeaderAsset({ file }) {
   return <img className="student-summary__icon" src={`/assets/icons/header/${file}`} alt="" aria-hidden="true" />;
+}
+
+function TopicSummary({ topic }) {
+  if (topic === "აპლიკაციის ინტერფეისი დიზაინი") {
+    return <p><span className="student-summary__topic-line"><strong>თემა:</strong> აპლიკაციის</span><span className="student-summary__topic-line">ინტერფეისი დიზაინი</span></p>;
+  }
+  return <p><strong>თემა:</strong> <span>{topic || "არ არის მითითებული"}</span></p>;
 }
 
 function buildMonthDays(activeDate, lectures) {
@@ -145,7 +152,7 @@ export default function StudentDashboard() {
   return <main className="student-dashboard"><Sidebar student={data.student} attendance={data.attendance} progress={data.progress} /><div className="student-dashboard__content">
     <header className="student-summary">
       <div className="student-summary__lecture"><HeaderAsset file="notification.svg" /><p><strong>შემდეგი ლექცია:</strong><b>{data.nextLecture ? `${formatLectureDay(data.nextLecture.date)} ${formatTime(data.nextLecture.date)}` : "დაგეგმილი არ არის"}</b></p></div>
-      <div className="student-summary__topic"><HeaderAsset file="bezier.svg" /><p><strong>თემა:</strong> <span>{data.nextLecture?.topic || "არ არის მითითებული"}</span></p></div>
+      <div className="student-summary__topic"><HeaderAsset file="bezier.svg" /><TopicSummary topic={data.nextLecture?.topic} /></div>
       <div className="student-summary__assignments"><HeaderAsset file="book.svg" /><p><strong>დავალებების პანელი</strong></p></div>
     </header>
     <div className="student-dashboard__workspace"><div className="student-dashboard__top"><CalendarCard lectures={data.lectures} nextLecture={data.nextLecture} /><AssignmentCard assignment={data.latestAssignment} recentGrade={data.recentGrade} onUploaded={retry} /></div><TasksPanel tasks={data.tasks} /></div>

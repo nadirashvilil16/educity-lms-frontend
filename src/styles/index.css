@@ -230,9 +230,10 @@ td {
 .student-summary__lecture p b { color: #e37200; }
 .student-summary__lecture p { width: 238px; }
 .student-summary__topic { gap: 29px !important; padding-left: 21px !important; }
-.student-summary__topic p { width: 215px; }
+.student-summary__topic p { width: 220px; font-size: 18px; line-height: 27px; letter-spacing: -.15px; }
 .student-summary__topic p strong { display: inline; color: #34a853; }
 .student-summary__topic p span { color: #000; }
+.student-summary__topic-line { display: block; white-space: nowrap; }
 .student-summary__assignments { gap: 10px !important; padding-left: 12px !important; }
 .student-summary__assignments p { white-space: nowrap; }
 

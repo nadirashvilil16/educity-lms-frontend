@@ -75,14 +75,14 @@ export const studentDashboardPreview = {
   nextLecture: {
     _id: "lecture-1",
     title: "UI/UX დიზაინი",
-    topic: "აპლიკაციის ინტერფეისი\u00A0დიზაინი",
+    topic: "აპლიკაციის ინტერფეისი დიზაინი",
     date: new Date(new Date().setHours(17, 0, 0, 0)).toISOString(),
   },
   lectures: [
     {
       _id: "lecture-1",
       title: "UI/UX დიზაინი",
-      topic: "აპლიკაციის ინტერფეისი\u00A0დიზაინი",
+      topic: "აპლიკაციის ინტერფეისი დიზაინი",
       date: new Date(new Date().setHours(17, 0, 0, 0)).toISOString(),
     },
     { _id: "lecture-2", title: "UI/UX დიზაინი", date: "2026-07-21T17:00:00" },
