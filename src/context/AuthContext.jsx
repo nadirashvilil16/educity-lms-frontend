@@ -5,9 +5,11 @@ export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const isStudentPreview = import.meta.env.DEV && new URLSearchParams(window.location.search).get("preview") === "student";
+    const isStudentPreview =
+      import.meta.env.DEV &&
+      new URLSearchParams(window.location.search).get("preview") === "student";
     if (isStudentPreview) {
-      return { firstName: "ანა", lastName: "აბაშიძე", role: "student" };
+      return { firstName: "ანა", lastName: "ახმეტელი", role: "student" };
     }
 
     const stored = localStorage.getItem("user");
@@ -32,5 +34,9 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-  return <AuthContext.Provider value={{ user, login, logout, setSession }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, login, logout, setSession }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
