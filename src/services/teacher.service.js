@@ -56,6 +56,11 @@ export async function listPendingSubmissions({ signal } = {}) {
   return data;
 }
 
+export async function getAssignmentRoster(assignmentId, { signal } = {}) {
+  const { data } = await api.get(`/teacher/assignments/${assignmentId}/roster`, { signal });
+  return data;
+}
+
 export async function gradeSubmission(assignmentId, submissionId, { status, score, comment }) {
   const { data } = await api.put(`/teacher/assignments/${assignmentId}/submissions/${submissionId}`, { status, score, comment });
   return data;

@@ -96,12 +96,12 @@ function PendingAssignments({ assignments }) {
     <header><h2>შესაფასებელი დავალებები</h2><Link to="/teacher/assignments">ყველას ნახვა</Link></header>
     <div className="teacher-pending__list">
       {assignments.length ? assignments.map((a) => (
-        <Link to="/teacher/assignments" className="teacher-pending-row" key={a._id}>
+        <Link to={`/teacher/assignments/${a._id}`} className="teacher-pending-row" key={a._id}>
           <strong>{a.title}</strong>
           <span>{a.groupId?.name || "ჯგუფი"}</span>
           <span>ვადა: {formatDate(a.dueDate)}</span>
         </Link>
-      )) : <p className="student-tasks__empty">დავალებები ჯერ არ არის შექმნილი</p>}
+      )) : <p className="student-tasks__empty">ვადიანი დავალება არ არის</p>}
     </div>
   </section>;
 }
@@ -126,7 +126,7 @@ export default function TeacherDashboard() {
           <TeacherCalendarCard lectures={data.lectures} nextLecture={data.nextLecture} />
           <GroupsPanel groups={data.groups} />
         </div>
-        <PendingAssignments assignments={data.assignments.filter((a) => a.title)} />
+        <PendingAssignments assignments={data.assignments.filter((a) => new Date(a.dueDate) >= new Date())} />
       </div>
     </div>
   </main>;

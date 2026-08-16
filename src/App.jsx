@@ -16,6 +16,7 @@ import TeacherGroups from "./pages/teacher/TeacherGroups";
 import TeacherGroupDetail from "./pages/teacher/TeacherGroupDetail";
 import TeacherAttendance from "./pages/teacher/TeacherAttendance";
 import TeacherAssignments from "./pages/teacher/TeacherAssignments";
+import TeacherAssignmentDetail from "./pages/teacher/TeacherAssignmentDetail";
 import TeacherPendingSubmissions from "./pages/teacher/TeacherPendingSubmissions";
 
 import ParentDashboard from "./pages/parent/ParentDashboard";
@@ -101,6 +102,14 @@ export default function App() {
           element={
             <ProtectedRoute allowedRoles={["teacher"]}>
               <TeacherAssignments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/assignments/:assignmentId"
+          element={
+            <ProtectedRoute allowedRoles={["teacher"]}>
+              <TeacherAssignmentDetail />
             </ProtectedRoute>
           }
         />
