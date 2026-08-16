@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { updateProfile } from "../../services/student.service";
+import { listNotifications, markNotificationRead } from "../../services/notification.service";
 
 const API_ORIGIN = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
 
@@ -22,12 +23,76 @@ export function SidebarAsset({ file, dir = "sidebar", className = "" }) {
   return <img className={className} src={`/assets/icons/${dir}/${file}`} alt="" aria-hidden="true" />;
 }
 
+const NOTIFICATION_MESSAGES_BY_TYPE = {
+  new_assignment: "ახალი დავალება",
+  new_grade: "ახალი შეფასება",
+  lecture_reminder: "ხვალ ლექცია გაქვს",
+  assignment_due_soon: "დავალების ვადა იწურება",
+  attendance_marked: "დასწრება მოინიშნა",
+};
+
+function timeAgo(value) {
+  const diffMs = Date.now() - new Date(value).getTime();
+  const minutes = Math.floor(diffMs / 60000);
+  if (minutes < 1) return "ახლახან";
+  if (minutes < 60) return `${minutes} წთ წინ`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} სთ წინ`;
+  return `${Math.floor(hours / 24)} დღის წინ`;
+}
+
+function NotificationsButton() {
+  const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    listNotifications().then((data) => { setNotifications(data); setLoaded(true); });
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
+
+  async function handleOpen(note) {
+    if (note.isRead) return;
+    setNotifications((prev) => prev.map((n) => (n._id === note._id ? { ...n, isRead: true } : n)));
+    await markNotificationRead(note._id);
+  }
+
+  return (
+    <div className="student-notifications" ref={wrapperRef}>
+      <button type="button" className="student-menu__item student-notifications__trigger" onClick={() => setOpen((v) => !v)}>
+        <SidebarAsset file="messages.svg" className="student-menu__icon" />შეტყობინებები
+        {unreadCount > 0 && <span className="student-notifications__badge">{unreadCount}</span>}
+      </button>
+      {open && (
+        <div className="student-notifications__panel">
+          {!loaded ? <p className="student-tasks__empty">იტვირთება...</p>
+            : notifications.length ? notifications.map((note) => (
+              <button type="button" key={note._id} className={`student-notifications__row${note.isRead ? "" : " is-unread"}`} onClick={() => handleOpen(note)}>
+                <span>{note.message || NOTIFICATION_MESSAGES_BY_TYPE[note.type] || note.type}</span>
+                <small>{timeAgo(note.createdAt)}</small>
+              </button>
+            )) : <p className="student-tasks__empty">შეტყობინებები ჯერ არ არის</p>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function buildMenuItems(student) {
   return [
     { to: "/student", icon: "category-2.svg", label: "Dashboard", end: true },
     { icon: "tag-right.svg", label: `კურსი: ${student.courseName || "არ არის მითითებული"}` },
     { icon: "people.svg", label: `ჯგუფი: ${student.groupName || "არ არის მითითებული"}` },
-    { icon: "messages.svg", label: "შეტყობინებები" },
     { icon: "card-coin.svg", label: "ფინანსები" },
   ];
 }
@@ -100,9 +165,13 @@ export function StudentSidebar({ student, attendance, progress, onProfileUpdated
       <strong><span>{student.firstName}</span><span>{student.lastName}</span></strong>
     </div>
     {editing && <ProfileEditModal student={student} onClose={() => setEditing(false)} onSaved={() => onProfileUpdated?.()} />}
-    <nav className="student-menu" aria-label="სტუდენტის მენიუ">{menuItems.map((item) => item.to
-      ? <NavLink key={item.label} to={item.to} end={item.end} className={({ isActive }) => isActive ? "is-active" : ""}><SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}</NavLink>
-      : <span className="student-menu__item" key={item.label}><SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}</span>)}</nav>
+    <nav className="student-menu" aria-label="სტუდენტის მენიუ">
+      {menuItems.slice(0, 3).map((item) => item.to
+        ? <NavLink key={item.label} to={item.to} end={item.end} className={({ isActive }) => isActive ? "is-active" : ""}><SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}</NavLink>
+        : <span className="student-menu__item" key={item.label}><SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}</span>)}
+      <NotificationsButton />
+      {menuItems.slice(3).map((item) => <span className="student-menu__item" key={item.label}><SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}</span>)}
+    </nav>
     <section className="student-progress-section"><h3><SidebarAsset file="diagram.svg" /> ჩემი პროგრესი</h3>
       <ProgressBar label="დასწრება" value={attendance.percentage} detail={`(ჩატარებული ${attendance.attended}/${attendance.held})`} />
       <ProgressBar label="კურსის პროგრესი" value={progress.percentage} detail={`(ჩატარდა ${progress.completed}/${progress.total} ლექციიდან)`} tone="orange" />

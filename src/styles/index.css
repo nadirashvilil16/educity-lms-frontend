@@ -215,6 +215,16 @@ td {
 .student-menu a:hover, .student-menu a.is-active { background: #f7f7f7; color: #21384f; }
 .student-menu a:hover img, .student-menu a.is-active img { filter: brightness(0); }
 
+.student-notifications { position: relative; }
+.student-notifications__trigger { width: 100%; border: 0; cursor: pointer; position: relative; }
+.student-notifications__trigger:hover { background: #f7f7f7; color: #21384f; }
+.student-notifications__trigger:hover img { filter: brightness(0); }
+.student-notifications__badge { margin-left: auto; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #ea4335; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.student-notifications__panel { position: absolute; z-index: 40; top: 0; left: calc(100% + 12px); width: 280px; max-height: 320px; overflow-y: auto; padding: 10px; border-radius: 12px; background: #fff; box-shadow: 0 8px 24px rgba(0, 0, 0, .25); display: grid; gap: 6px; }
+.student-notifications__row { width: 100%; padding: 8px 10px; border: 0; border-radius: 8px; background: #f4f6f8; color: #071c31; text-align: left; font: inherit; font-size: 13px; cursor: pointer; display: grid; gap: 3px; }
+.student-notifications__row.is-unread { background: #eaf1ff; font-weight: 700; }
+.student-notifications__row small { color: #65717d; font-weight: 400; font-size: 11px; }
+
 .student-progress-section { width: 248px; margin: 27px auto 0; padding: 0; }
 .student-progress-section h3 { margin: 0 0 22px 1px; display: flex; align-items: center; gap: 15px; color: #f2f2f2; font-size: 20px; line-height: 27px; }
 .student-progress-section h3 img { display: block; width: 24px; height: 24px; }
