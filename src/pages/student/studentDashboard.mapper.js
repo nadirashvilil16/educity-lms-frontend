@@ -47,6 +47,9 @@ export function mapStudentDashboard(payload = {}, sessionUser = null) {
         payload.student?.lastName ||
         sessionUser?.lastName ||
         "",
+      courseName: payload.courseName || payload.student?.courseName || null,
+      groupName: payload.groupName || payload.student?.groupName || null,
+      avatarUrl: payload.avatarUrl || payload.student?.avatarUrl || null,
     },
     attendance: {
       percentage: numberOr(attendance.percentage),
@@ -72,6 +75,8 @@ export function mapStudentDashboard(payload = {}, sessionUser = null) {
 export const studentDashboardPreview = {
   firstName: "ანა",
   lastName: "ახმეტელი",
+  courseName: "UI/UX დიზაინი",
+  groupName: "მეორე",
   attendance: { percentage: 87.5, attended: 16, held: 18 },
   progress: { percentage: 66, completed: 16, total: 24 },
   nextLecture: {
