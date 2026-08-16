@@ -1,5 +1,11 @@
 import api from "./api";
 
+const API_ORIGIN = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
+export function resolveFileUrl(fileUrl) {
+  if (!fileUrl) return null;
+  return fileUrl.startsWith("http") ? fileUrl : `${API_ORIGIN}${fileUrl}`;
+}
+
 export async function getDashboard({ signal } = {}) {
   const { data } = await api.get("/teacher/dashboard", { signal });
   return data;
@@ -45,7 +51,12 @@ export async function listSubmissions(assignmentId, { signal } = {}) {
   return data;
 }
 
-export async function gradeSubmission(assignmentId, submissionId, { status, score }) {
-  const { data } = await api.put(`/teacher/assignments/${assignmentId}/submissions/${submissionId}`, { status, score });
+export async function listPendingSubmissions({ signal } = {}) {
+  const { data } = await api.get("/teacher/submissions/pending", { signal });
+  return data;
+}
+
+export async function gradeSubmission(assignmentId, submissionId, { status, score, comment }) {
+  const { data } = await api.put(`/teacher/assignments/${assignmentId}/submissions/${submissionId}`, { status, score, comment });
   return data;
 }

@@ -32,8 +32,8 @@ export function TeacherSidebar({ teacher, groupCount, pendingGradingCount }) {
           <SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}
         </NavLink>
       ))}
-      <NavLink to="/teacher" end className={({ isActive }) => isActive ? "is-active" : ""}><SidebarAsset file="people.svg" className="student-menu__icon" />ჯგუფები: {groupCount}</NavLink>
-      <NavLink to="/teacher/assignments" className={({ isActive }) => isActive ? "is-active" : ""}><SidebarAsset file="tag-right.svg" className="student-menu__icon" />შესამოწმებელი: {pendingGradingCount}</NavLink>
+      <NavLink to="/teacher/groups" className={({ isActive }) => isActive ? "is-active" : ""}><SidebarAsset file="people.svg" className="student-menu__icon" />ჯგუფები: {groupCount}</NavLink>
+      <NavLink to="/teacher/grading" className={({ isActive }) => isActive ? "is-active" : ""}><SidebarAsset file="tag-right.svg" className="student-menu__icon" />შესამოწმებელი: {pendingGradingCount}</NavLink>
     </nav>
     <button type="button" className="sidebar-logout" onClick={() => { logout(); navigate("/login"); }}>გასვლა</button>
   </aside>;

@@ -119,7 +119,7 @@ export default function TeacherDashboard() {
       <header className="student-summary">
         <div className="student-summary__lecture"><p><strong>შემდეგი ლექცია:</strong><b>{data.nextLecture ? `${formatDate(data.nextLecture.date)} ${formatTime(data.nextLecture.date)}` : "დაგეგმილი არ არის"}</b></p></div>
         <div><p><strong>ჯგუფები:</strong> <span>{data.groups.length}</span></p></div>
-        <Link to="/teacher/assignments"><p><strong>შესამოწმებელი დავალებები:</strong> <span>{data.pendingGradingCount}</span></p></Link>
+        <Link to="/teacher/grading"><p><strong>შესამოწმებელი დავალებები:</strong> <span>{data.pendingGradingCount}</span></p></Link>
       </header>
       <div className="student-dashboard__workspace">
         <div className="student-dashboard__top">

@@ -327,6 +327,7 @@ td {
 .lecture-task b { margin-left: 8px; color: #e86400; }
 .lecture-task button { width: 282px; height: 33px; padding: 5px 8px; border: 0; border-radius: 8px; background: rgba(52, 168, 83, .78); color: #dadce0; display: flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; font-family: inherit; font-size: 11.5px; line-height: 18px; font-weight: 700; }
 .lecture-task button img { width: 22px; height: 22px; }
+.lecture-task__comment { margin: 8px 0 0; padding: 8px 10px; border-radius: 8px; background: #f4f6f8; color: rgba(0, 0, 0, .75); font-size: 12.5px; font-weight: 400; }
 
 .student-tasks { position: relative; width: 100%; height: 264px; min-height: 0; margin-top: 14px; border-radius: 32px; background: #144169; padding: 30px 46px 20px 16px; display: grid; grid-template-columns: 182px minmax(0, 1fr); gap: 47px; color: #292d32; }
 .student-tasks__more { position: absolute; top: 6px; left: 30px; width: 24px; height: 24px; }
@@ -352,6 +353,7 @@ td {
 
 .teacher-groups { border-width: 12px; border-color: #041b30; height: 524px; display: flex; flex-direction: column; }
 .teacher-groups__list { flex: 1; min-height: 0; overflow-y: auto; padding: 10px 16px; display: grid; gap: 10px; align-content: start; }
+.teacher-groups-page-list { display: grid; gap: 12px; }
 .teacher-group-row { padding: 12px 14px; border-radius: 12px; background: #f4f6f8; display: grid; gap: 6px; font-size: 13px; }
 .teacher-group-row__name { display: flex; flex-direction: column; }
 .teacher-group-row__name strong { font-size: 15px; color: var(--ink); }
@@ -388,7 +390,8 @@ td {
 .teacher-assignment-form input, .teacher-assignment-form select, .teacher-assignment-form textarea { padding: 8px 10px; border: 1px solid #dfe3e7; border-radius: 8px; font: inherit; }
 .teacher-assignment-form button { padding: 9px; border: 0; border-radius: 8px; background: #143b65; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
 .submissions { margin-top: 12px; display: grid; gap: 4px; }
-.submissions__row input[type="number"] { width: 70px; padding: 6px 8px; border: 1px solid #dfe3e7; border-radius: 6px; font: inherit; }
+.submissions__row input[type="number"] { width: 90px; padding: 6px 8px; border: 1px solid #dfe3e7; border-radius: 6px; font: inherit; }
+.submissions__row input[type="text"] { flex: 1; min-width: 120px; padding: 6px 8px; border: 1px solid #dfe3e7; border-radius: 6px; font: inherit; }
 .submissions__row button { padding: 6px 12px; border: 1px solid #dfe3e7; border-radius: 6px; background: #fff; font: inherit; cursor: pointer; }
 
 .student-page-title { margin: 0 0 20px; font-size: 24px; line-height: 32px; color: var(--ink); }

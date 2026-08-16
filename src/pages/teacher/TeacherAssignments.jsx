@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useTeacherDashboard } from "../../hooks/useTeacherDashboard";
-import { createAssignment, listAssignments, listSubmissions, gradeSubmission } from "../../services/teacher.service";
+import { createAssignment, listAssignments, listSubmissions, gradeSubmission, resolveFileUrl } from "../../services/teacher.service";
 import { TeacherSidebar, TeacherState } from "../../components/teacher/TeacherSidebar";
 
 const formatDate = (value) => new Date(value).toLocaleDateString("ka-GE");
@@ -9,22 +9,25 @@ const STATUS_LABELS = { pending: "შესამოწმებელია", a
 
 function SubmissionRow({ assignmentId, submission, onGraded }) {
   const [score, setScore] = useState("");
+  const [comment, setComment] = useState("");
 
   async function handleAccept() {
-    await gradeSubmission(assignmentId, submission._id, { status: "accepted", score: Number(score) || 0 });
+    await gradeSubmission(assignmentId, submission._id, { status: "accepted", score: Number(score) || 0, comment });
     onGraded();
   }
   async function handleReject() {
-    await gradeSubmission(assignmentId, submission._id, { status: "rejected" });
+    await gradeSubmission(assignmentId, submission._id, { status: "rejected", comment });
     onGraded();
   }
 
   return (
     <div className="submissions__row">
       <span>{submission.studentId?.firstName} {submission.studentId?.lastName}</span>
+      {submission.fileUrl && <a href={resolveFileUrl(submission.fileUrl)} target="_blank" rel="noreferrer">ნაშრომის ნახვა</a>}
       {submission.status === "pending" ? (
         <>
           <input type="number" min="0" max="100" placeholder="ქულა" value={score} onChange={(e) => setScore(e.target.value)} />
+          <input type="text" placeholder="კომენტარი (არასავალდებულო)" value={comment} onChange={(e) => setComment(e.target.value)} />
           <button type="button" onClick={handleAccept}>მიღებულია</button>
           <button type="button" onClick={handleReject}>არ არის მიღებული</button>
         </>

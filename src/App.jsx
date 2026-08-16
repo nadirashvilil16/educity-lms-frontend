@@ -12,9 +12,11 @@ import StudentAssignments from "./pages/student/StudentAssignments";
 import StudentGrades from "./pages/student/StudentGrades";
 
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
+import TeacherGroups from "./pages/teacher/TeacherGroups";
 import TeacherGroupDetail from "./pages/teacher/TeacherGroupDetail";
 import TeacherAttendance from "./pages/teacher/TeacherAttendance";
 import TeacherAssignments from "./pages/teacher/TeacherAssignments";
+import TeacherPendingSubmissions from "./pages/teacher/TeacherPendingSubmissions";
 
 import ParentDashboard from "./pages/parent/ParentDashboard";
 import ParentAttendance from "./pages/parent/ParentAttendance";
@@ -71,6 +73,14 @@ export default function App() {
           }
         />
         <Route
+          path="/teacher/groups"
+          element={
+            <ProtectedRoute allowedRoles={["teacher"]}>
+              <TeacherGroups />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/teacher/groups/:groupId"
           element={
             <ProtectedRoute allowedRoles={["teacher"]}>
@@ -91,6 +101,14 @@ export default function App() {
           element={
             <ProtectedRoute allowedRoles={["teacher"]}>
               <TeacherAssignments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/grading"
+          element={
+            <ProtectedRoute allowedRoles={["teacher"]}>
+              <TeacherPendingSubmissions />
             </ProtectedRoute>
           }
         />

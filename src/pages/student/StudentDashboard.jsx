@@ -95,6 +95,7 @@ function CalendarCard({ lectures, nextLecture }) {
 function AssignmentCard({ assignment, recentGrade, previousLectureDate, onUploaded }) {
   const inputRef = useRef(null);
   const [upload, setUpload] = useState({ loading: false, error: null });
+  const [showComment, setShowComment] = useState(false);
 
   async function handleFile(file) {
     if (!file || !assignment?.id) return;
@@ -114,7 +115,7 @@ function AssignmentCard({ assignment, recentGrade, previousLectureDate, onUpload
       {upload.error && <p className="dashboard-inline-error">ფაილი ვერ აიტვირთა. სცადეთ ხელახლა.</p>}
       <div className="status-line"><BodyAsset file="clock.svg" /><strong>STATUS:</strong><span>{assignment.submission?.status || <>მოლოდინში/<br />ჩაბარებული/<br />ვადაგასული</>}</span></div>
     </article> : <article><p>აქტიური დავალება არ არის.</p></article>}
-    {recentGrade && <article className="lecture-task"><h3><BodyAsset file="book-saved-1.svg" /><span>წინა დავალების შეფასება</span></h3><p>დავალება{recentGrade.number ? ` #${recentGrade.number}` : ""}: “{recentGrade.title}” <b>{recentGrade.submission.score}/10</b></p><button type="button"><BodyAsset file="import.svg" />გახსენით ლექტორის კომენტარი</button></article>}
+    {recentGrade && <article className="lecture-task"><h3><BodyAsset file="book-saved-1.svg" /><span>წინა დავალების შეფასება</span></h3><p>დავალება{recentGrade.number ? ` #${recentGrade.number}` : ""}: “{recentGrade.title}” <b>{recentGrade.submission.score}/10</b></p><button type="button" onClick={() => setShowComment((v) => !v)}><BodyAsset file="import.svg" />{showComment ? "დამალვა" : "გახსენით ლექტორის კომენტარი"}</button>{showComment && <p className="lecture-task__comment">{recentGrade.submission.teacherComment || "ლექტორმა კომენტარი არ დატოვა"}</p>}</article>}
   </section>;
 }
 
