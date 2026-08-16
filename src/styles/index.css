@@ -402,6 +402,7 @@ td {
 
 .teacher-assignment-form { display: grid; gap: 10px; max-width: 420px; margin-bottom: 28px; padding: 18px; border-radius: 16px; background: #fff; border: 1px solid #e3e6ea; }
 .teacher-assignment-form input, .teacher-assignment-form select, .teacher-assignment-form textarea { padding: 8px 10px; border: 1px solid #dfe3e7; border-radius: 8px; font: inherit; }
+.teacher-assignment-form select:disabled { background: #f4f6f8; color: #9aa4ad; cursor: not-allowed; }
 .teacher-assignment-form button { padding: 9px; border: 0; border-radius: 8px; background: #143b65; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
 .submissions { margin-top: 12px; display: grid; gap: 4px; }
 .submissions__row input[type="number"] { width: 90px; padding: 6px 8px; border: 1px solid #dfe3e7; border-radius: 6px; font: inherit; }

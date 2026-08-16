@@ -96,8 +96,9 @@ export default function TeacherAssignments() {
               <option value="">-- ჯგუფი --</option>
               {dashboard.data.groups.map((g) => <option key={g._id} value={g._id}>{g.name}</option>)}
             </select>
-            <select value={selectedGroup?.courseName || ""} disabled>
-              <option>{selectedGroup ? (selectedGroup.courseName || "კურსი არ არის მითითებული") : "-- ჯერ აირჩიეთ ჯგუფი --"}</option>
+            <select value={selectedGroup?.courseName || ""} onChange={() => {}} disabled={!selectedGroup} required>
+              <option value="">{selectedGroup ? "-- კურსი --" : "-- ჯერ აირჩიეთ ჯგუფი --"}</option>
+              {selectedGroup && <option value={selectedGroup.courseName || ""}>{selectedGroup.courseName || "კურსი არ არის მითითებული"}</option>}
             </select>
             <input placeholder="სათაური" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
             <textarea placeholder="აღწერა" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
