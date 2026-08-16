@@ -83,6 +83,8 @@ export default function TeacherAssignments() {
   if (dashboard.loading && !dashboard.data) return <TeacherState message="იტვირთება..." />;
   if (dashboard.error || !dashboard.data) return <TeacherState message="მონაცემები ვერ ჩაიტვირთა." />;
 
+  const selectedGroup = dashboard.data.groups.find((g) => g._id === form.groupId);
+
   return (
     <main className="student-dashboard">
       <TeacherSidebar teacher={dashboard.data.teacher} groupCount={dashboard.data.groups.length} pendingGradingCount={dashboard.data.pendingGradingCount} />
@@ -93,6 +95,9 @@ export default function TeacherAssignments() {
             <select value={form.groupId} onChange={(e) => setForm({ ...form, groupId: e.target.value })} required>
               <option value="">-- ჯგუფი --</option>
               {dashboard.data.groups.map((g) => <option key={g._id} value={g._id}>{g.name}</option>)}
+            </select>
+            <select value={selectedGroup?.courseName || ""} disabled>
+              <option>{selectedGroup ? (selectedGroup.courseName || "კურსი არ არის მითითებული") : "-- ჯერ აირჩიეთ ჯგუფი --"}</option>
             </select>
             <input placeholder="სათაური" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
             <textarea placeholder="აღწერა" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />

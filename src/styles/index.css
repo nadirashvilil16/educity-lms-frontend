@@ -311,11 +311,12 @@ td {
 .student-deadline__description { width: 259px; margin: 7px 0 8px !important; font-weight: 700; }
 .student-deadline__deadline { height: 28px; display: flex; align-items: center; gap: 7px; color: #575e73; font-size: 16px; line-height: 22px; }
 .student-deadline__deadline img { width: 24px; height: 24px; }
-.upload-file { height: 34px; margin-top: 7px; padding: 5px 8px; border-radius: 8px; background: rgba(234, 183, 45, .63); font-weight: 700; }
-.upload-file { width: 294px; border: 0; display: flex; align-items: center; gap: 10px; text-align: left; font-family: inherit; cursor: pointer; }
-.upload-file img { width: 24px; height: 24px; }
-.upload-file span { color: rgba(0, 0, 0, .7); font-size: 16px; line-height: 22px; }
+.upload-file { min-height: 34px; margin-top: 7px; padding: 5px 8px; border-radius: 8px; background: rgba(234, 183, 45, .63); font-weight: 700; }
+.upload-file { width: 100%; max-width: 294px; border: 0; display: flex; align-items: center; gap: 10px; text-align: left; font-family: inherit; cursor: pointer; }
+.upload-file img { flex: 0 0 24px; width: 24px; height: 24px; }
+.upload-file span { min-width: 0; color: rgba(0, 0, 0, .7); font-size: 16px; line-height: 22px; }
 .upload-file:disabled { cursor: not-allowed; opacity: .75; }
+.upload-file:disabled small { display: none; }
 .upload-file small { margin-left: auto; color: #000; opacity: .6; font-size: 10px; line-height: 14px; white-space: nowrap; }
 .status-line { margin-top: 6px; display: grid; grid-template-columns: 24px 76px 1fr; align-items: start; gap: 7px; color: rgba(41, 45, 50, .78); font-size: 15px; line-height: 20px; }
 .status-line img { width: 24px; height: 24px; }
