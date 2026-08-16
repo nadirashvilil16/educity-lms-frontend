@@ -12,6 +12,7 @@ import StudentAssignments from "./pages/student/StudentAssignments";
 import StudentGrades from "./pages/student/StudentGrades";
 
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
+import TeacherGroupDetail from "./pages/teacher/TeacherGroupDetail";
 import TeacherAttendance from "./pages/teacher/TeacherAttendance";
 import TeacherAssignments from "./pages/teacher/TeacherAssignments";
 
@@ -66,6 +67,14 @@ export default function App() {
           element={
             <ProtectedRoute allowedRoles={["teacher"]}>
               <TeacherDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teacher/groups/:groupId"
+          element={
+            <ProtectedRoute allowedRoles={["teacher"]}>
+              <TeacherGroupDetail />
             </ProtectedRoute>
           }
         />

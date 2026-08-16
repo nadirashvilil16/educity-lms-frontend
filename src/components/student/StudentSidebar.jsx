@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import { updateProfile } from "../../services/student.service";
 
 const API_ORIGIN = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
@@ -85,6 +86,8 @@ function ProfileEditModal({ student, onClose, onSaved }) {
 export function StudentSidebar({ student, attendance, progress, onProfileUpdated }) {
   const menuItems = buildMenuItems(student);
   const [editing, setEditing] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const avatarSrc = student.avatarUrl
     ? (student.avatarUrl.startsWith("http") ? student.avatarUrl : `${API_ORIGIN}${student.avatarUrl}`)
     : null;
@@ -104,6 +107,7 @@ export function StudentSidebar({ student, attendance, progress, onProfileUpdated
       <ProgressBar label="დასწრება" value={attendance.percentage} detail={`(ჩატარებული ${attendance.attended}/${attendance.held})`} />
       <ProgressBar label="კურსის პროგრესი" value={progress.percentage} detail={`(ჩატარდა ${progress.completed}/${progress.total} ლექციიდან)`} tone="orange" />
     </section>
+    <button type="button" className="sidebar-logout" onClick={() => { logout(); navigate("/login"); }}>გასვლა</button>
   </aside>;
 }
 

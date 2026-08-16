@@ -11,7 +11,7 @@ export function Navbar() {
     navigate("/login");
   }
 
-  if (!user || location.pathname.startsWith("/student")) return null;
+  if (!user || location.pathname.startsWith("/student") || location.pathname.startsWith("/teacher")) return null;
 
   return (
     <nav className="navbar">

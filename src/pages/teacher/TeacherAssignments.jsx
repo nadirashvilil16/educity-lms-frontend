@@ -1,25 +1,65 @@
 import { useEffect, useState } from "react";
-import api from "../../services/api";
+import { useAuth } from "../../hooks/useAuth";
+import { useTeacherDashboard } from "../../hooks/useTeacherDashboard";
+import { createAssignment, listAssignments, listSubmissions, gradeSubmission } from "../../services/teacher.service";
+import { TeacherSidebar, TeacherState } from "../../components/teacher/TeacherSidebar";
+
+const formatDate = (value) => new Date(value).toLocaleDateString("ka-GE");
+const STATUS_LABELS = { pending: "შესამოწმებელია", accepted: "მიღებულია", rejected: "არ არის მიღებული" };
+
+function SubmissionRow({ assignmentId, submission, onGraded }) {
+  const [score, setScore] = useState("");
+
+  async function handleAccept() {
+    await gradeSubmission(assignmentId, submission._id, { status: "accepted", score: Number(score) || 0 });
+    onGraded();
+  }
+  async function handleReject() {
+    await gradeSubmission(assignmentId, submission._id, { status: "rejected" });
+    onGraded();
+  }
+
+  return (
+    <div className="submissions__row">
+      <span>{submission.studentId?.firstName} {submission.studentId?.lastName}</span>
+      {submission.status === "pending" ? (
+        <>
+          <input type="number" min="0" max="100" placeholder="ქულა" value={score} onChange={(e) => setScore(e.target.value)} />
+          <button type="button" onClick={handleAccept}>მიღებულია</button>
+          <button type="button" onClick={handleReject}>არ არის მიღებული</button>
+        </>
+      ) : (
+        <span>{STATUS_LABELS[submission.status]}{submission.score != null ? ` · ${submission.score}` : ""}</span>
+      )}
+    </div>
+  );
+}
 
 export default function TeacherAssignments() {
-  const [groups, setGroups] = useState([]);
+  const { user } = useAuth();
+  const dashboard = useTeacherDashboard(user);
   const [assignments, setAssignments] = useState([]);
   const [form, setForm] = useState({ groupId: "", title: "", description: "", dueDate: "" });
   const [openAssignmentId, setOpenAssignmentId] = useState(null);
   const [submissions, setSubmissions] = useState([]);
+  const [saving, setSaving] = useState(false);
 
-  function load() {
-    api.get("/teacher/groups").then((res) => setGroups(res.data));
-    api.get("/teacher/assignments").then((res) => setAssignments(res.data));
+  function loadAssignments() {
+    listAssignments().then(setAssignments);
   }
 
-  useEffect(load, []);
+  useEffect(loadAssignments, []);
 
-  async function handleCreate(e) {
-    e.preventDefault();
-    await api.post("/teacher/assignments", form);
-    setForm({ groupId: "", title: "", description: "", dueDate: "" });
-    load();
+  async function handleCreate(event) {
+    event.preventDefault();
+    setSaving(true);
+    try {
+      await createAssignment(form);
+      setForm({ groupId: "", title: "", description: "", dueDate: "" });
+      loadAssignments();
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function toggleSubmissions(assignmentId) {
@@ -27,79 +67,60 @@ export default function TeacherAssignments() {
       setOpenAssignmentId(null);
       return;
     }
-    const { data } = await api.get(`/teacher/assignments/${assignmentId}/submissions`);
+    const data = await listSubmissions(assignmentId);
     setSubmissions(data);
     setOpenAssignmentId(assignmentId);
   }
 
-  async function handleGrade(assignmentId, submissionId, status) {
-    const score = status === "accepted" ? Number(window.prompt("ქულა:", "100")) : 0;
-    await api.put(`/teacher/assignments/${assignmentId}/submissions/${submissionId}`, { status, score });
-    const { data } = await api.get(`/teacher/assignments/${assignmentId}/submissions`);
+  async function reloadSubmissions(assignmentId) {
+    const data = await listSubmissions(assignmentId);
     setSubmissions(data);
   }
 
+  if (dashboard.loading && !dashboard.data) return <TeacherState message="იტვირთება..." />;
+  if (dashboard.error || !dashboard.data) return <TeacherState message="მონაცემები ვერ ჩაიტვირთა." />;
+
   return (
-    <div className="teacher-assignments">
-      <h1>ახალი დავალება</h1>
-      <form onSubmit={handleCreate}>
-        <select value={form.groupId} onChange={(e) => setForm({ ...form, groupId: e.target.value })} required>
-          <option value="">-- ჯგუფი --</option>
-          {groups.map((g) => (
-            <option key={g._id} value={g._id}>
-              {g.name}
-            </option>
-          ))}
-        </select>
-        <input
-          placeholder="სათაური"
-          value={form.title}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
-          required
-        />
-        <textarea
-          placeholder="აღწერა"
-          value={form.description}
-          onChange={(e) => setForm({ ...form, description: e.target.value })}
-        />
-        <input
-          type="date"
-          value={form.dueDate}
-          onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
-          required
-        />
-        <button type="submit">შექმნა</button>
-      </form>
+    <main className="student-dashboard">
+      <TeacherSidebar teacher={dashboard.data.teacher} groupCount={dashboard.data.groups.length} pendingGradingCount={dashboard.data.pendingGradingCount} />
+      <div className="student-dashboard__content">
+        <div className="student-dashboard__workspace">
+          <h1 className="student-page-title">ახალი დავალება</h1>
+          <form className="teacher-assignment-form" onSubmit={handleCreate}>
+            <select value={form.groupId} onChange={(e) => setForm({ ...form, groupId: e.target.value })} required>
+              <option value="">-- ჯგუფი --</option>
+              {dashboard.data.groups.map((g) => <option key={g._id} value={g._id}>{g.name}</option>)}
+            </select>
+            <input placeholder="სათაური" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
+            <textarea placeholder="აღწერა" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            <input type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} required />
+            <button type="submit" disabled={saving}>{saving ? "იქმნება..." : "შექმნა"}</button>
+          </form>
 
-      <h1>დავალებები</h1>
-      {assignments.map((a) => (
-        <div key={a._id} className="assignment-card">
-          <h3>{a.title}</h3>
-          <p>ჩაბარების ვადა: {new Date(a.dueDate).toLocaleDateString("ka-GE")}</p>
-          <button onClick={() => toggleSubmissions(a._id)}>
-            {openAssignmentId === a._id ? "დახურვა" : "ნაშრომების ნახვა"}
-          </button>
-
-          {openAssignmentId === a._id && (
-            <div className="submissions">
-              {submissions.map((s) => (
-                <div key={s._id} className="submissions__row">
-                  <span>
-                    {s.studentId.firstName} {s.studentId.lastName}
-                  </span>
-                  <span>{s.status === "pending" ? "შესამოწმებელია" : `${s.status} · ${s.score}`}</span>
-                  {s.status === "pending" && (
-                    <>
-                      <button onClick={() => handleGrade(a._id, s._id, "accepted")}>მიღებულია</button>
-                      <button onClick={() => handleGrade(a._id, s._id, "rejected")}>არ არის მიღებული</button>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+          <h1 className="student-page-title">დავალებები</h1>
+          <div className="assignment-row-list">
+            {assignments.map((a) => (
+              <article className="assignment-row-card" key={a._id}>
+                <header>
+                  <h3>{a.title}</h3>
+                  <span className="assignment-status is-none">{a.groupId?.name}</span>
+                </header>
+                <p className="assignment-row-card__deadline">ჩაბარების ვადა: {formatDate(a.dueDate)}</p>
+                <button type="button" className="upload-file" onClick={() => toggleSubmissions(a._id)}>
+                  <span>{openAssignmentId === a._id ? "დახურვა" : "ნაშრომების ნახვა"}</span>
+                </button>
+                {openAssignmentId === a._id && (
+                  <div className="submissions">
+                    {submissions.length ? submissions.map((s) => (
+                      <SubmissionRow key={s._id} assignmentId={a._id} submission={s} onGraded={() => reloadSubmissions(a._id)} />
+                    )) : <p className="student-tasks__empty">ნაშრომები ჯერ არ არის ატვირთული</p>}
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
+      </div>
+    </main>
   );
 }
