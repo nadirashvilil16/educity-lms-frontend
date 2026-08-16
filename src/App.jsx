@@ -24,13 +24,6 @@ import ParentAttendance from "./pages/parent/ParentAttendance";
 import ParentAssignments from "./pages/parent/ParentAssignments";
 import ParentGrades from "./pages/parent/ParentGrades";
 
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminStudents from "./pages/admin/AdminStudents";
-import AdminTeachers from "./pages/admin/AdminTeachers";
-import AdminCourses from "./pages/admin/AdminCourses";
-import AdminGroups from "./pages/admin/AdminGroups";
-import AdminAttendance from "./pages/admin/AdminAttendance";
-
 export default function App() {
   return (
     <AuthProvider>
@@ -151,55 +144,6 @@ export default function App() {
           element={
             <ProtectedRoute allowedRoles={["parent"]}>
               <ParentGrades />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/students"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AdminStudents />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/teachers"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AdminTeachers />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/courses"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AdminCourses />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/groups"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AdminGroups />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/attendance"
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AdminAttendance />
             </ProtectedRoute>
           }
         />
