@@ -352,6 +352,18 @@ td {
 .student-tasks__list small { margin-top: auto; display: flex; align-items: center; gap: 4px; color: #292d32; font-size: 10px; line-height: 14px; font-weight: 700; }
 .student-tasks__list small img { width: 16px; height: 16px; }
 .student-tasks__empty { margin: 0; font-size: 12px; }
+.student-tasks aside button { cursor: pointer; border-radius: 8px; }
+.student-tasks aside button.is-active { background: rgba(255, 255, 255, .25); }
+.student-tasks__list form.add-task { border: 0; padding: 0; }
+.student-tasks__list form.add-task input { flex: 1; min-width: 0; border: 0; border-bottom: 1px solid rgba(255, 255, 255, .6); background: transparent; color: #fff; font: inherit; font-size: 14px; }
+.student-tasks__list form.add-task input::placeholder { color: rgba(255, 255, 255, .7); }
+.student-tasks__list form.add-task button { flex: 0 0 auto; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.student-task-row { justify-content: space-between; }
+.student-task-row__toggle, .student-task-row__star { padding: 0; border: 0; background: transparent; cursor: pointer; display: flex; }
+.student-task-row span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.student-task-row span.is-done { text-decoration: line-through; opacity: .6; }
+.student-task-row__star img { opacity: .3; }
+.student-task-row__star.is-starred img { opacity: 1; filter: sepia(1) saturate(6) hue-rotate(-10deg) brightness(1.1); }
 
 .teacher-groups { border-width: 12px; border-color: #041b30; height: 524px; min-height: 0; display: flex; flex-direction: column; }
 .teacher-groups__list { flex: 1; min-height: 0; overflow-y: auto; padding: 10px 16px; display: grid; gap: 10px; align-content: start; }

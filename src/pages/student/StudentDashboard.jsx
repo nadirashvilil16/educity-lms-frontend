@@ -1,8 +1,8 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useStudentDashboard } from "../../hooks/useStudentDashboard";
-import { submitAssignment } from "../../services/student.service";
+import { submitAssignment, createTask, updateTask } from "../../services/student.service";
 import { StudentSidebar, StudentState } from "../../components/student/StudentSidebar";
 
 const WEEKDAYS = ["ორშ", "სამ", "ოთხ", "ხუთ", "პარ", "შაბ", "კვ"];
@@ -119,22 +119,68 @@ function AssignmentCard({ assignment, recentGrade, previousLectureDate, onUpload
   </section>;
 }
 
-function TasksPanel({ tasks }) {
+function TasksPanel({ tasks: initialTasks }) {
+  const [tasks, setTasks] = useState(initialTasks);
+  const [filter, setFilter] = useState("all");
+  const [adding, setAdding] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
+  const addInputRef = useRef(null);
+
+  useEffect(() => setTasks(initialTasks), [initialTasks]);
+
+  const visibleTasks = filter === "starred" ? tasks.filter((t) => t.starred) : tasks;
+  const completedCount = tasks.filter((t) => t.completed).length;
+
+  function startAdding() {
+    setFilter("all");
+    setAdding(true);
+    setTimeout(() => addInputRef.current?.focus(), 0);
+  }
+
+  async function handleAddSubmit(event) {
+    event.preventDefault();
+    const title = newTitle.trim();
+    if (!title) { setAdding(false); return; }
+    const created = await createTask(title);
+    setTasks((prev) => [created, ...prev]);
+    setNewTitle("");
+    setAdding(false);
+  }
+
+  async function toggleCompleted(task) {
+    setTasks((prev) => prev.map((t) => (t._id === task._id ? { ...t, completed: !t.completed } : t)));
+    await updateTask(task._id, { completed: !task.completed });
+  }
+
+  async function toggleStarred(task) {
+    setTasks((prev) => prev.map((t) => (t._id === task._id ? { ...t, starred: !t.starred } : t)));
+    await updateTask(task._id, { starred: !task.starred });
+  }
+
   return <section className="student-tasks">
     <FooterAsset file="more.svg" className="student-tasks__more" />
     <aside>
       <div className="student-tasks__aside-title"><FooterAsset file="receipt.svg" /><strong>TASKS</strong></div>
-      <button type="button"><FooterAsset file="add-circle.svg" />CREATE</button>
-      <button type="button"><FooterAsset file="tick-circle.svg" />ALL TASKS</button>
-      <button type="button"><FooterAsset file="Star 1.svg" />STARRED</button>
+      <button type="button" onClick={startAdding}><FooterAsset file="add-circle.svg" />CREATE</button>
+      <button type="button" className={filter === "all" ? "is-active" : ""} onClick={() => setFilter("all")}><FooterAsset file="tick-circle.svg" />ALL TASKS</button>
+      <button type="button" className={filter === "starred" ? "is-active" : ""} onClick={() => setFilter("starred")}><FooterAsset file="Star 1.svg" />STARRED</button>
     </aside>
     <div className="student-tasks__list">
       <h3>MY TASKS</h3>
-      <button type="button" className="add-task"><span>ADD TASK</span><FooterAsset file="add-circle-1.svg" /></button><hr />
+      {adding
+        ? <form className="add-task" onSubmit={handleAddSubmit}><input ref={addInputRef} value={newTitle} onChange={(e) => setNewTitle(e.target.value)} onBlur={() => !newTitle.trim() && setAdding(false)} placeholder="ახალი დავალება..." /><button type="submit"><FooterAsset file="add-circle-1.svg" /></button></form>
+        : <button type="button" className="add-task" onClick={startAdding}><span>ADD TASK</span><FooterAsset file="add-circle-1.svg" /></button>}
+      <hr />
       <div className="student-tasks__rows">
-        {tasks.length ? tasks.map((task) => <div className="student-task-row" key={task._id || task.id || task.title}><FooterAsset file={task.completed ? "tick-circle-1.svg" : "mirror.svg"} /><span>{task.title}</span></div>) : <p className="student-tasks__empty">დავალებები ჯერ არ არის</p>}
+        {visibleTasks.length ? visibleTasks.map((task) => (
+          <div className="student-task-row" key={task._id}>
+            <button type="button" className="student-task-row__toggle" onClick={() => toggleCompleted(task)}><FooterAsset file={task.completed ? "tick-circle-1.svg" : "mirror.svg"} /></button>
+            <span className={task.completed ? "is-done" : ""}>{task.title}</span>
+            <button type="button" className={`student-task-row__star${task.starred ? " is-starred" : ""}`} onClick={() => toggleStarred(task)}><FooterAsset file="Star 1.svg" /></button>
+          </div>
+        )) : <p className="student-tasks__empty">{filter === "starred" ? "ვარსკვლავიანი დავალება არ არის" : "დავალებები ჯერ არ არის"}</p>}
       </div>
-      <small><FooterAsset file="flag.svg" />COMPLITED</small>
+      <small><FooterAsset file="flag.svg" />COMPLETED: {completedCount}/{tasks.length}</small>
     </div>
   </section>;
 }

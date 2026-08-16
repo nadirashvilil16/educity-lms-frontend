@@ -1,9 +1,10 @@
 import api from "./api";
 
 export async function getDashboard({ signal } = {}) {
-  const [dashboardResult, assignmentsResult] = await Promise.allSettled([
+  const [dashboardResult, assignmentsResult, tasksResult] = await Promise.allSettled([
     api.get("/student/dashboard", { signal }),
     api.get("/student/assignments", { signal }),
+    api.get("/student/tasks", { signal }),
   ]);
 
   if (dashboardResult.status === "rejected") throw dashboardResult.reason;
@@ -11,7 +12,23 @@ export async function getDashboard({ signal } = {}) {
   return {
     ...dashboardResult.value.data,
     assignments: assignmentsResult.status === "fulfilled" ? assignmentsResult.value.data : [],
+    tasks: tasksResult.status === "fulfilled" ? tasksResult.value.data : [],
   };
+}
+
+export async function createTask(title) {
+  const { data } = await api.post("/student/tasks", { title });
+  return data;
+}
+
+export async function updateTask(taskId, update) {
+  const { data } = await api.patch(`/student/tasks/${taskId}`, update);
+  return data;
+}
+
+export async function deleteTask(taskId) {
+  const { data } = await api.delete(`/student/tasks/${taskId}`);
+  return data;
 }
 
 export async function getGrades({ signal } = {}) {
