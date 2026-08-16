@@ -1,9 +1,11 @@
 import api from "./api";
+import { getSelectedGroupId } from "./enrollment.service";
 
 export async function getDashboard({ signal } = {}) {
+  const params = getSelectedGroupId() ? { groupId: getSelectedGroupId() } : {};
   const [dashboardResult, assignmentsResult, tasksResult] = await Promise.allSettled([
-    api.get("/student/dashboard", { signal }),
-    api.get("/student/assignments", { signal }),
+    api.get("/student/dashboard", { signal, params }),
+    api.get("/student/assignments", { signal, params }),
     api.get("/student/tasks", { signal }),
   ]);
 
@@ -32,7 +34,8 @@ export async function deleteTask(taskId) {
 }
 
 export async function getGrades({ signal } = {}) {
-  const { data } = await api.get("/student/grades", { signal });
+  const params = getSelectedGroupId() ? { groupId: getSelectedGroupId() } : {};
+  const { data } = await api.get("/student/grades", { signal, params });
   return data;
 }
 

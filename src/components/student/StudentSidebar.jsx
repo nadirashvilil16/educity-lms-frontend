@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { updateProfile } from "../../services/student.service";
 import { listNotifications, markNotificationRead } from "../../services/notification.service";
+import { listEnrollments, setSelectedGroupId } from "../../services/enrollment.service";
 
 const API_ORIGIN = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
 
@@ -91,10 +92,52 @@ function NotificationsButton() {
 function buildMenuItems(student) {
   return [
     { to: "/student", icon: "category-2.svg", label: "Dashboard", end: true },
-    { icon: "tag-right.svg", label: `კურსი: ${student.courseName || "არ არის მითითებული"}` },
     { icon: "people.svg", label: `ჯგუფი: ${student.groupName || "არ არის მითითებული"}` },
     { icon: "card-coin.svg", label: "ფინანსები" },
   ];
+}
+
+function CourseSwitcher({ courseName }) {
+  const [open, setOpen] = useState(false);
+  const [enrollments, setEnrollments] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    listEnrollments().then((data) => { setEnrollments(data); setLoaded(true); });
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  function handleSelect(groupId) {
+    setSelectedGroupId(groupId);
+    window.location.reload();
+  }
+
+  return (
+    <div className="student-notifications" ref={wrapperRef}>
+      <button type="button" className="student-menu__item student-notifications__trigger" onClick={() => setOpen((v) => !v)}>
+        <SidebarAsset file="tag-right.svg" className="student-menu__icon" />კურსი: {courseName || "არ არის მითითებული"}
+      </button>
+      {open && (
+        <div className="student-notifications__panel">
+          {!loaded ? <p className="student-tasks__empty">იტვირთება...</p>
+            : enrollments.length ? enrollments.map((e) => (
+              <button type="button" key={e._id} className="student-notifications__row" onClick={() => handleSelect(e.groupId)}>
+                <span>{e.courseName || "კურსი"}</span>
+                <small>ჯგუფი: {e.groupName || "—"}</small>
+              </button>
+            )) : <p className="student-tasks__empty">კურსები ჯერ არ არის</p>}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function ProgressBar({ label, value, detail, tone = "yellow" }) {
@@ -166,11 +209,11 @@ export function StudentSidebar({ student, attendance, progress, onProfileUpdated
     </div>
     {editing && <ProfileEditModal student={student} onClose={() => setEditing(false)} onSaved={() => onProfileUpdated?.()} />}
     <nav className="student-menu" aria-label="სტუდენტის მენიუ">
-      {menuItems.slice(0, 3).map((item) => item.to
-        ? <NavLink key={item.label} to={item.to} end={item.end} className={({ isActive }) => isActive ? "is-active" : ""}><SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}</NavLink>
-        : <span className="student-menu__item" key={item.label}><SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}</span>)}
+      {menuItems.slice(0, 1).map((item) => <NavLink key={item.label} to={item.to} end={item.end} className={({ isActive }) => isActive ? "is-active" : ""}><SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}</NavLink>)}
+      <CourseSwitcher courseName={student.courseName} />
+      {menuItems.slice(1, 2).map((item) => <span className="student-menu__item" key={item.label}><SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}</span>)}
       <NotificationsButton />
-      {menuItems.slice(3).map((item) => <span className="student-menu__item" key={item.label}><SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}</span>)}
+      {menuItems.slice(2).map((item) => <span className="student-menu__item" key={item.label}><SidebarAsset file={item.icon} dir={item.dir} className="student-menu__icon" />{item.label}</span>)}
     </nav>
     <section className="student-progress-section"><h3><SidebarAsset file="diagram.svg" /> ჩემი პროგრესი</h3>
       <ProgressBar label="დასწრება" value={attendance.percentage} detail={`(ჩატარებული ${attendance.attended}/${attendance.held})`} />
