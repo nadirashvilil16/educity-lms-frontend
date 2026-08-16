@@ -216,7 +216,7 @@ td {
 .student-menu a:hover img, .student-menu a.is-active img { filter: brightness(0); }
 
 .student-notifications { position: relative; }
-.student-notifications__trigger { width: 100%; border: 0; cursor: pointer; position: relative; }
+.student-notifications__trigger { width: 100%; border: 0; background: transparent; font-family: inherit; cursor: pointer; position: relative; }
 .student-notifications__trigger:hover { background: #f7f7f7; color: #21384f; }
 .student-notifications__trigger:hover img { filter: brightness(0); }
 .student-notifications__badge { margin-left: auto; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #ea4335; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
